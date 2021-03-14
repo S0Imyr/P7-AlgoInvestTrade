@@ -23,9 +23,20 @@ class Share:
         self.price = price
         self.profit = profit
 
+    def __repr__(self):
+        return f'Share {self.id}: \n' \
+               f'Price: {self.price} \n' \
+               f'Profit: {self.profit}'
+
     def evaluate_profit(self):
         return self.price * self.profit / 100
 
+
+def display_cell_length(message, length):
+    if len(str(message)) > length:
+        return str(message)[:length]
+    else:
+        return str(message) + " " * (length - len(str(message)))
 
 class Portfolio:
     def __init__(self):
@@ -37,6 +48,12 @@ class Portfolio:
         else:
             for num_share in range(len(prices)):
                 self.shares.append(Share(num_share, prices[num_share], profits[num_share]))
+
+    def __repr__(self):
+        display = display_cell_length('Share', 12) + ' | ' + display_cell_length('Price', 12) + ' | ' + display_cell_length('Profit', 12) + '\n'
+        for share in self.shares:
+            display += display_cell_length(share.id, 12) + ' | ' + display_cell_length(share.price, 12) + ' | ' + display_cell_length(share.profit, 12) + '\n'
+        return display
 
 
 def available_shares(list_shares, money):
@@ -69,13 +86,16 @@ possibility_profit = 0
 
 if __name__ == "__main__":
 
+    try_portfolio = Portfolio()
+    try_portfolio.initialize(pricestry, profitstry)
     share_option = []
-    for share in shares.values():
+    for share in try_portfolio.shares:
         for i in range(how_many_shares(share.price, money)):
             share_option.append(share)
 
     print(share_option)
-    print(shares)
+    print(try_portfolio)
+
 """    for num_share in range(len(how)):
         for j in range(how[num_share]):
             possibility = []"""
