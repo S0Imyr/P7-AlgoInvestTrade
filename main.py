@@ -12,17 +12,38 @@ actual_share = 0
 total_cost = 0
 
 
-def serialize_shares(prices_list, profits_list):
-    shares = {}
-    for num_share in range(len(prices_list)):
-        shares[num_share] = {}
-        shares[num_share]['price'] = prices_list[num_share]
-        shares[num_share]['profits'] = profits_list[num_share]
-    return shares
+class Branch:
+    def __init__(self):
+        self.shares = []
 
 
-def how_many_shares(cost, money):
-    return money // cost
+class Share:
+    def __init__(self, id, price, profit):
+        self.id = id
+        self.price = price
+        self.profit = profit
+
+    def evaluate_profit(self):
+        return self.price * self.profit / 100
+
+
+class Portfolio:
+    def __init__(self):
+        self.shares = []
+
+    def initialize(self, prices, profits):
+        if len(prices) != len(profits):
+            print("The prices data and the profits data must coincide. The number of element don't match")
+        else:
+            for num_share in range(len(prices)):
+                self.shares.append(Share(num_share, prices[num_share], profits[num_share]))
+
+
+def available_shares(list_shares, money):
+    pass
+
+def how_many_shares(share_price, money):
+    return money // share_price
 
 
 def can_i_add_share(cost, money):
@@ -47,11 +68,14 @@ possibility_profit = 0
         actual_share += 1"""
 
 if __name__ == "__main__":
-    how = []
-    for share in pricestry:
-        how.append(how_many_shares(share, money))
-    print(how)
-    print(serialize_shares(prices, profits))
+
+    share_option = []
+    for share in shares.values():
+        for i in range(how_many_shares(share.price, money)):
+            share_option.append(share)
+
+    print(share_option)
+    print(shares)
 """    for num_share in range(len(how)):
         for j in range(how[num_share]):
             possibility = []"""
