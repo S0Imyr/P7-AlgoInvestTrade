@@ -11,10 +11,21 @@ actual_share = 0
 
 total_cost = 0
 
+class Tree:
+    def __init__(self, possibility):
+        self.possibility = possibility
+        self.nodes = []
+
+
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.explored = False
+
 
 class Branch:
     def __init__(self):
-        self.shares = []
+        self.nodes = []
 
 
 class Share:
