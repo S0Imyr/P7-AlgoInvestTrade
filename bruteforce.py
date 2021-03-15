@@ -139,6 +139,7 @@ class Portfolio:
             display += display_cell_length(share.id, 12) + ' | ' + display_cell_length(share.price, 12) + ' | ' + display_cell_length(share.profit, 12) + '\n'
         return display
 
+
 if __name__ == '__main__':
     names, prices, profits = import_shares_data()
     print(names)
