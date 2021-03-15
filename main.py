@@ -7,6 +7,7 @@ profitstry = [0.05, 0.1, 0.15, 0.2, 0.17, 0.25]
 
 min_price = min(pricestry)
 
+
 class Tree:
     def __init__(self, shares):
         self.shares = shares
