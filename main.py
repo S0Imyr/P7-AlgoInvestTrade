@@ -1,7 +1,7 @@
 prices = [10, 15, 25, 35, 30, 40, 11, 13, 24, 17, 21, 55, 19, 7, 9, 4, 2, 5, 12, 57]
 profits = [0.05, 0.10, 0.15, 0.20, 0.17, 0.25, 0.07, 0.11, 0.13, 0.27, 0.17, 0.09, 0.23, 0.01, 0.03, 0.08, 0.12, 0.14, 0.21, 0.18]
 
-money = 100
+target = 100
 pricestry = [10, 15, 25, 35, 30, 40]
 profitstry = [0.05, 0.1, 0.15, 0.2, 0.17, 0.25]
 
@@ -11,21 +11,79 @@ actual_share = 0
 
 total_cost = 0
 
+
 class Tree:
-    def __init__(self, possibility):
-        self.possibility = possibility
+    def __init__(self, shares):
+        self.shares = shares
         self.nodes = []
+        self.opened_nodes = []
+        self.branch = []
+
+    def initialize(self):
+        for share in self.shares:
+            new_node = Node(1, share, share.price)
+            new_node.history = [share.id]
+            self.opened_nodes.append(new_node)
+        self.nodes = [self.opened_nodes]
+
+    def explore(self):
+        next_nodes = []
+        for node in self.opened_nodes:
+            history = node.history
+            for share in self.shares:
+                if node.price + min_price <= target:
+                    if node.price + share.price <= target:
+                        child = Node(node.height + 1, share, node.price + share.price)
+                        child.history.extend(history)
+                        child.history.append(share.id)
+                        next_nodes.append(child)
+                else:
+                    self.branch.append(Possibility(node.history))
+        self.opened_nodes = next_nodes
+        self.nodes.append(next_nodes)
+
+    def cut_branch(self):
+        self.opened_nodes = []
+        for node in self.nodes:
+            node.price += node.share.price
+            if node.price < target:
+                self.opened_nodes.append(node)
+
+    def grow(self):
+        pass
 
 
 class Node:
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, height, share, price):
+        self.height = height
+        self.share = share
+        self.price = price
+        self.history = []
         self.explored = False
 
+    def __repr__(self):
+        return f'Node ({self.height}, {self.share.id}) --- ' \
+               f'price = {self.price}'
 
-class Branch:
-    def __init__(self):
-        self.nodes = []
+
+class Possibility:
+    def __init__(self, shares_ids):
+        self.shares_ids = shares_ids
+        self.profit = 0
+        self.price = 0
+
+    def evaluate_price(self):
+        for share_id in self.shares_ids:
+            self.price += tree.shares[share_id].price
+
+    def evaluate_profit(self):
+        for share_id in self.shares_ids:
+            self.profit += tree.shares[share_id].evaluate_profit()
+
+    def __repr__(self):
+        return f'Shares : {self.shares_ids} --- ' \
+               f'Price : {self.price} --- ' \
+               f'Profit : {self.profit}'
 
 
 class Share:
@@ -48,6 +106,7 @@ def display_cell_length(message, length):
         return str(message)[:length]
     else:
         return str(message) + " " * (length - len(str(message)))
+
 
 class Portfolio:
     def __init__(self):
@@ -82,30 +141,48 @@ def add_share(share_id):
     pass
 
 
-possibility = []
-possibility_cost = 0
-possibility_profit = 0
-
-"""while possibility_cost + min_price < money:
-    
-
-    if total_cost + pricestry[actual_share]:
-        total_cost += pricestry[actual_share]
-        total_profit += pricestry[actual_share] * profitstry[actual_share]
-    else:
-        actual_share += 1"""
-
 if __name__ == "__main__":
 
     try_portfolio = Portfolio()
     try_portfolio.initialize(pricestry, profitstry)
     share_option = []
     for share in try_portfolio.shares:
-        for i in range(how_many_shares(share.price, money)):
+        for i in range(how_many_shares(share.price, target)):
             share_option.append(share)
 
     print(share_option)
     print(try_portfolio)
+
+    tree = Tree(try_portfolio.shares)
+    tree.initialize()
+    print(tree.nodes)
+    tree.explore()
+    print(tree.opened_nodes)
+    tree.explore()
+    print(tree.opened_nodes)
+    print(tree.opened_nodes[1].history)
+    tree.explore()
+    print(tree.opened_nodes)
+    tree.explore()
+    print(tree.opened_nodes)
+    tree.explore()
+    print(tree.opened_nodes)
+    tree.explore()
+    print(tree.opened_nodes)
+    tree.explore()
+    print(tree.opened_nodes)
+    tree.explore()
+    print(tree.opened_nodes)
+    tree.explore()
+    print(tree.opened_nodes)
+    print(tree.branch[0])
+    tree.branch[0].evaluate_profit()
+    tree.branch[0].evaluate_price()
+    print(tree.branch[0])
+"""    while len(tree.open_nodes) == 0:
+        tree.explore()
+        tree.cut_branch()"""
+
 
 """    for num_share in range(len(how)):
         for j in range(how[num_share]):
