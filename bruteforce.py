@@ -21,32 +21,34 @@ def how_many_shares(share_price, money):
     return money // share_price
 
 
-class Tree:
+class BigTree:
     def __init__(self, shares):
-        self.possibilities = shares
+        self.choices = []
+        for share in shares:
+            self.choices.append(Choice(share.id, share.price, share.profit))
         self.nodes = []
         self.opened_nodes = []
         self.branch = []
 
     def initialize(self):
-        for possibility in self.possibilities:
-            new_node = Node(1, possibility, 0, 0)
-            new_node.history = [possibility.id]
+        for choice in self.choices:
+            new_node = Node(1, choice, 0, 0)
+            new_node.history = [choice.name]
             new_node.evaluate()
             self.opened_nodes.append(new_node)
         self.nodes = [self.opened_nodes]
 
-    def explore(self):
+    def explore(self, cap):
         next_nodes = []
         for node in self.opened_nodes:
             history = node.history
-            for possibility in self.possibilities:
-                if node.price + min_price <= target:
-                    if node.price + possibility.price <= target:
-                        child = Node(node.height + 1, possibility, node.price, node.profit)
+            for choice in self.choices:
+                if node.price + min_price <= cap:
+                    if node.price + choice.price <= cap:
+                        child = Node(node.height + 1, choice, node.price, node.profit)
                         child.evaluate()
                         child.history.extend(history)
-                        child.history.append(possibility.id)
+                        child.history.append(choice.name)
                         next_nodes.append(child)
                 else:
                     self.branch.append(Branch(node.history, node.price, node.profit))
@@ -54,10 +56,20 @@ class Tree:
         self.nodes.append(next_nodes)
 
 
+class Choice:
+    def __init__(self, name, price, profit):
+        self.name = name
+        self.price = price
+        self.profit = profit
+
+
+
+
+
 class Node:
-    def __init__(self, height, share, price, profit):
+    def __init__(self, height, choice, price, profit):
         self.height = height
-        self.share = share
+        self.choice = choice
         self.price = price
         self.profit = profit
         self.history = []
@@ -65,7 +77,7 @@ class Node:
         self.evaluated = False
 
     def __repr__(self):
-        display = f'Node ({self.height}, {self.share.id}) \n'
+        display = f'Node ({self.height}, {self.choice.name}) \n'
         if self.evaluated:
             display += f'Price : {self.price}'
         else:
@@ -75,11 +87,11 @@ class Node:
     def evaluate(self):
         if not self.evaluated:
             if self.price == 0:
-                self.price = self.share.price
-                self.profit = self.share.profit
+                self.price = self.choice.price
+                self.profit = self.choice.profit
             else:
-                net_profit = self.profit * self.price + self.share.price * self.share.profit
-                self.price += self.share.price
+                net_profit = self.profit * self.price + self.choice.price * self.choice.profit
+                self.price += self.choice.price
                 self.profit = net_profit / self.price
             self.evaluated = True
 
@@ -143,46 +155,47 @@ if __name__ == '__main__':
     """ Tests data """
     pricestry = [10, 15, 25, 35, 30, 40]
     profitstry = [0.05, 0.1, 0.15, 0.2, 0.17, 0.25]
-    target = 500
+    try_cap = 100
     min_price = min(pricestry)
     try_portfolio = Portfolio()
     try_portfolio.initialize(pricestry, profitstry)
     """ Tests data """
     try_tree_height = 0
     for share in try_portfolio.shares:
-        try_tree_height = max(try_tree_height, how_many_shares(share.price, target))
+        try_tree_height = max(try_tree_height, how_many_shares(share.price, try_cap))
 
 
     portfolio = Portfolio()
     portfolio.initialize(prices, profits)
+    cap = 500
 
     tree_height = 0
     for share in portfolio.shares:
-        tree_height = max(tree_height, how_many_shares(share.price, target))
+        tree_height = max(tree_height, how_many_shares(share.price, cap))
     print(tree_height)
 
-    """tree = Tree(try_portfolio.shares)
+    tree = BigTree(try_portfolio.shares)
     tree.initialize()
     print('Step 1: ', len(tree.opened_nodes))
-    tree.explore()
+    tree.explore(try_cap)
     print('Step 2', len(tree.opened_nodes))
-    tree.explore()
+    tree.explore(try_cap)
     print('Step 3', len(tree.opened_nodes))
-    tree.explore()
+    tree.explore(try_cap)
     print('Step 4', len(tree.opened_nodes))
-    tree.explore()
+    tree.explore(try_cap)
     print('Step 5', len(tree.opened_nodes))
-    tree.explore()
+    tree.explore(try_cap)
     print('Step 6', len(tree.opened_nodes))
-    tree.explore()
+    tree.explore(try_cap)
     print('Step 7', len(tree.opened_nodes))
-    tree.explore()
+    tree.explore(try_cap)
     print('Step 8', len(tree.opened_nodes))
-    tree.explore()
+    tree.explore(try_cap)
     print('Step 9', len(tree.opened_nodes))
-    tree.explore()
+    tree.explore(try_cap)
     print('Step 10', len(tree.opened_nodes))
-    tree.explore()
+    tree.explore(try_cap)
 
     print(tree.branch[0])
-    print(len(tree.branch))"""
+    print(len(tree.branch))
