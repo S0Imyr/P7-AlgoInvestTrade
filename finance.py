@@ -20,12 +20,12 @@ class Portfolio:
     def __init__(self):
         self.actions = []
 
-    def initialize(self, prices, profits):
-        if len(prices) != len(profits):
+    def initialize(self, names, prices, profits):
+        if len(names) != len(prices) or len(names) != len(profits) or len(prices) != len(profits):
             print("The prices data and the profits data must coincide. The number of element don't match")
         else:
-            for num_action in range(len(prices)):
-                self.actions.append(Action(num_action, prices[num_action], profits[num_action]))
+            for action in range(len(names)):
+                self.actions.append(Action(names[action], prices[action], profits[action]))
 
     def __repr__(self):
         display = display_cell_length('Action', 12) + ' | ' \

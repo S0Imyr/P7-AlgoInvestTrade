@@ -1,4 +1,5 @@
-import csv
+import csv, math
+from finance import Action, Portfolio
 
 
 def import_actions_data():
@@ -21,90 +22,37 @@ def how_many_shares(action_price, money):
     return int(money / action_price)
 
 
-class BigTree:
-    def __init__(self, actions):
-        self.choices = []
-        for action in actions:
-            self.choices.append(Choice(action.id, action.price, action.profit))
-        self.nodes = []
-        self.opened_nodes = []
-        self.branch = []
-
-    def initialize(self):
-        for choice in self.choices:
-            new_node = Node(1, choice, 0, 0)
-            new_node.history = [choice.name]
-            new_node.evaluate()
-            self.opened_nodes.append(new_node)
-        self.nodes = [self.opened_nodes]
-
-    def explore(self, cap):
-        next_nodes = []
-        for node in self.opened_nodes:
-            history = node.history
-            for choice in self.choices:
-                if node.price + min_price <= cap:
-                    if node.price + choice.price <= cap:
-                        child = Node(node.height + 1, choice, node.price, node.profit)
-                        child.evaluate()
-                        child.history.extend(history)
-                        child.history.append(choice.name)
-                        next_nodes.append(child)
-                else:
-                    self.branch.append(Branch(node.history, node.price, node.profit))
-        self.opened_nodes = next_nodes
-        self.nodes.append(next_nodes)
-
-
 class Choice:
     def __init__(self, name, price, profit):
         self.name = name
         self.price = price
         self.profit = profit
 
-
-class Tree:
-    def __init__(self, actions):
-        self.possibilities = []
-        self.actions = actions
-        self.nodes = []
-        self.opened_nodes = []
-        self.branch = []
-
-    def initialize(self, target):
-        action = self.actions[0]
-        firsts_nodes = []
-        max_shares = how_many_shares(action.price, target) + 1
-        for i in range(max_shares):
-            choice = Choice(f'{i} action {action.id}', action.price * i, action.profit)
-            first_node = Node(1, choice, 0, 0)
-            first_node.evaluate()
-            firsts_nodes.append(first_node)
-        self.opened_nodes = firsts_nodes
-        self.nodes.extend(firsts_nodes)
-
-    def explore(self, target):
-        for action in self.actions[1:]:
-            for i in range(how_many_shares(action.price, target)):
-                pass
+    def __repr__(self):
+        return f'{self.name}: \n' \
+               f'Price: {self.price} \n' \
+               f'Profit: {self.profit} \n'
 
 
 class Node:
-    def __init__(self, height, choice, price, profit):
+    def __init__(self, height, width, choice, price, profit):
         self.height = height
+        self.width = width
         self.choice = choice
         self.price = price
         self.profit = profit
         self.history = []
         self.explored = False
         self.evaluated = False
+        self.open = True
 
     def __repr__(self):
-        display = f'Node ({self.height}, {self.choice.name}) \n'
+        display = f'Node ({self.height}, {self.width}) - '
         if self.evaluated:
-            display += f'Price : {self.price}'
+            display += f'Price : {self.price}\n' \
+                       f'Profit : {self.profit}\n'
         else:
-            display += 'not yet priced'
+            display += 'not yet priced\n'
         return display
 
     def evaluate(self):
@@ -119,57 +67,52 @@ class Node:
             self.evaluated = True
 
 
-
 class Branch:
-    def __init__(self, actions_ids, price, profit):
-        self.actions_ids = actions_ids
+    def __init__(self, history, price, profit):
+        self.history = history
         self.price = price
         self.profit = profit
 
     def __repr__(self):
-        return f'Action : {self.actions_ids} --- ' \
+        return f'{self.history} --- ' \
                f'Price : {self.price} --- ' \
                f'Profit : {self.profit}'
 
 
-class Action:
-    def __init__(self, id, price, profit):
-        self.id = id
-        self.price = price
-        self.profit = profit
+class Tree:
+    def __init__(self, actions):
+        self.actions = actions
+        self.choices = []
+        self.nodes = [[Node(0, 0, Choice(0, 0, 0), 0, 0)]]
+        self.branch = []
 
-    def __repr__(self):
-        return f'Action {self.id}: \n' \
-               f'Price: {self.price} \n' \
-               f'Profit: {self.profit}'
+    def define_choices_optimised(self, action, cap):
+        self.choices = []
+        for i in range(how_many_shares(action.price, cap) + 1):
+            self.choices.append(Choice(f"{i} action(s) {action.id}", i * action.price, action.profit))
 
-    def net_profit(self):
-        return self.price * self.profit
-
-
-def display_cell_length(message, length):
-    if len(str(message)) > length:
-        return str(message)[:length]
-    else:
-        return str(message) + " " * (length - len(str(message)))
-
-
-class Portfolio:
-    def __init__(self):
-        self.actions = []
-
-    def initialize(self, prices, profits):
-        if len(prices) != len(profits):
-            print("The prices data and the profits data must coincide. The number of element don't match")
-        else:
-            for num_action in range(len(prices)):
-                self.actions.append(Action(num_action, prices[num_action], profits[num_action]))
-
-    def __repr__(self):
-        display = display_cell_length('Action', 12) + ' | ' + display_cell_length('Price', 12) + ' | ' + display_cell_length('Profit', 12) + '\n'
+    def define_choices_brute(self):
+        self.choices = []
         for action in self.actions:
-            display += display_cell_length(action.id, 12) + ' | ' + display_cell_length(action.price, 12) + ' | ' + display_cell_length(action.profit, 12) + '\n'
-        return display
+            self.choices.append(Choice(action.id, action.price, action.profit))
+
+    def grow(self):
+        i = 0
+        min_choice_price = math.inf
+        next_nodes = []
+        for choice in self.choices:
+            min_choice_price = min(min_choice_price, choice.price)
+
+        for node in self.nodes[-1]:
+            for choice in self.choices:
+                if node.price + choice.price <= cap:
+                    new_node = Node(node.height + 1, i, choice, node.price, node.profit)
+                    new_node.history.extend(node.history)
+                    new_node.history.append(choice.name)
+                    new_node.evaluate()
+                    next_nodes.append(new_node)
+                    i += 1
+        self.nodes.append(next_nodes)
 
 
 if __name__ == '__main__':
@@ -177,26 +120,39 @@ if __name__ == '__main__':
 
 
     """ Tests data """
+    #0
+    names1 = [1, 2, 3]
+    prices1 = [15, 30, 40]
+    profits1 = [0.10, 0.17, 0.25]
+    min_price = 10
+
+    portfolio = Portfolio()
+    portfolio.initialize(names1, prices1, profits1)
+
+    cap = 100
+
+    #1
+    namestry = ['01', '02', '03', '04', '05', '06']
     pricestry = [10, 15, 25, 35, 30, 40]
     profitstry = [0.05, 0.1, 0.15, 0.2, 0.17, 0.25]
     try_cap = 100
-    min_price = min(pricestry)
+    min_pricetry = min(pricestry)
+
     try_portfolio = Portfolio()
-    try_portfolio.initialize(pricestry, profitstry)
+    try_portfolio.initialize(namestry, pricestry, profitstry)
+
     """ Tests data """
-    try_tree_height = 0
-    for action in try_portfolio.actions:
-        try_tree_height = max(try_tree_height, how_many_shares(action.price, try_cap))
 
 
-    portfolio = Portfolio()
-    portfolio.initialize(prices, profits)
-    cap = 500
+    portfolio.initialize(names, prices, profits)
 
-    tree_height = 0
-    for action in portfolio.actions:
-        tree_height = max(tree_height, how_many_shares(action.price, cap))
-    print(tree_height)
+    tree = Tree(portfolio.actions)
+
+    for num_action in range(len(names1)):
+        tree.define_choices_optimised(portfolio.actions[num_action], cap)
+        tree.grow()
+        print(tree.nodes[-1])
+
 
     """    tree = BigTree(try_portfolio.actions)
     tree.initialize()
@@ -224,7 +180,3 @@ if __name__ == '__main__':
     print(tree.branch[0])
     print(len(tree.branch))"""
 
-    secondtree = Tree(portfolio.actions)
-
-    secondtree.initialize(500)
-    print(secondtree.opened_nodes)
