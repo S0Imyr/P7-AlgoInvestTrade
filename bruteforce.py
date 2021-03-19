@@ -1,182 +1,75 @@
-import csv, math
-from finance import Action, Portfolio
+import math
+import cProfile
 
-
-def import_actions_data():
-    names = []
-    prices = []
-    profits = []
-    with open('dataForceBrute.csv', newline='') as csvfile:
-        data = csv.reader(csvfile, delimiter=';')
-        for row in data:
-            if row[0] != 'name':
-                names.append(row[0])
-            if row[1] != 'price':
-                prices.append(float(row[1]))
-            if row[2] != 'profit':
-                profits.append(float(row[2]))
-    return names, prices, profits
-
-
-def how_many_shares(action_price, money):
-    return int(money / action_price)
-
-
-class Choice:
-    def __init__(self, name, price, profit):
-        self.name = name
-        self.price = price
-        self.profit = profit
-
-    def __repr__(self):
-        return f'{self.name}: \n' \
-               f'Price: {self.price} \n' \
-               f'Profit: {self.profit} \n'
+from finance import Portfolio
+from importdata import import_actions_data
 
 
 class Node:
-    def __init__(self, height, width, choice, price, profit):
+    def __init__(self, height, width, price, net_profit, composition):
         self.height = height
         self.width = width
-        self.choice = choice
         self.price = price
-        self.profit = profit
-        self.history = []
-        self.explored = False
-        self.evaluated = False
-        self.open = True
+        self.net_profit = net_profit
+        self.composition = composition
 
     def __repr__(self):
         display = f'Node ({self.height}, {self.width}) - '
-        if self.evaluated:
-            display += f'Price : {self.price}\n' \
-                       f'Profit : {self.profit}\n'
-        else:
-            display += 'not yet priced\n'
+        display += f'Price : {self.price}\n' \
+                   f'Profit : {self.net_profit}\n'
         return display
 
-    def evaluate(self):
-        if not self.evaluated:
-            if self.price == 0:
-                self.price = self.choice.price
-                self.profit = self.choice.profit
-            else:
-                net_profit = self.profit * self.price + self.choice.price * self.choice.profit
-                self.price += self.choice.price
-                self.profit = net_profit / self.price
-            self.evaluated = True
 
-
-class Branch:
-    def __init__(self, history, price, profit):
-        self.history = history
-        self.price = price
-        self.profit = profit
-
-    def __repr__(self):
-        return f'{self.history} --- ' \
-               f'Price : {self.price} --- ' \
-               f'Profit : {self.profit}'
-
-
-class Tree:
-    def __init__(self, actions):
-        self.actions = actions
-        self.choices = []
-        self.nodes = [[Node(0, 0, Choice(0, 0, 0), 0, 0)]]
-        self.branch = []
-
-    def define_choices_optimised(self, action, cap):
-        self.choices = []
-        for i in range(how_many_shares(action.price, cap) + 1):
-            self.choices.append(Choice(f"{i} action(s) {action.id}", i * action.price, action.profit))
-
-    def define_choices_brute(self):
-        self.choices = []
-        for action in self.actions:
-            self.choices.append(Choice(action.id, action.price, action.profit))
-
-    def grow(self):
-        i = 0
-        min_choice_price = math.inf
+def knapsack(market, cap):
+    step = 0
+    nodes = [Node(step, 0, 0, 0, [])]
+    for action in market.actions:
         next_nodes = []
-        for choice in self.choices:
-            min_choice_price = min(min_choice_price, choice.price)
+        width = 0
+        for node in nodes:
+            node.width += 1
+            width += 1
+            next_nodes.append(node)
+            new_price = node.price + action.price
+            if new_price < cap:
+                new_profit = node.net_profit + action.net_profit
+                new_composition = []
+                new_composition.extend(node.composition)
+                new_composition.append(action.name)
+                next_nodes.append(Node(step, width, new_price, new_profit, new_composition))
+            width += 1
+        step += 1
+        nodes = next_nodes
+    return nodes
 
-        for node in self.nodes[-1]:
-            for choice in self.choices:
-                if node.price + choice.price <= cap:
-                    new_node = Node(node.height + 1, i, choice, node.price, node.profit)
-                    new_node.history.extend(node.history)
-                    new_node.history.append(choice.name)
-                    new_node.evaluate()
-                    next_nodes.append(new_node)
-                    i += 1
-        self.nodes.append(next_nodes)
+
+def best_portfolio(nodes):
+    best_node = Node(0, 0, math.inf, 0, [])
+    best_nodes = [best_node]
+    for node in nodes:
+        if node.net_profit > best_node.net_profit:
+            best_node = node
+        elif node.net_profit == best_node.net_profit:
+            if node.price < best_node.price:
+                best_node = node
+            elif node.price == best_node.price:
+                best_nodes.append(node)
+    if len(best_nodes) > 1:
+        return best_nodes
+    else:
+        return best_node
 
 
 if __name__ == '__main__':
-    names, prices, profits = import_actions_data()
+    cap0 = 500
 
+    names, prices, profits = import_actions_data('dataForceBrute.csv')
+    market1 = Portfolio([])
+    market1.convert_to_action(names, prices, profits)
 
-    """ Tests data """
-    #0
-    names1 = [1, 2, 3]
-    prices1 = [15, 30, 40]
-    profits1 = [0.10, 0.17, 0.25]
-    min_price = 10
+    result = best_portfolio(knapsack(market1, cap0))
+    print(result.composition)
+    print(result.price)
+    print(result.net_profit)
 
-    portfolio = Portfolio()
-    portfolio.initialize(names1, prices1, profits1)
-
-    cap = 100
-
-    #1
-    namestry = ['01', '02', '03', '04', '05', '06']
-    pricestry = [10, 15, 25, 35, 30, 40]
-    profitstry = [0.05, 0.1, 0.15, 0.2, 0.17, 0.25]
-    try_cap = 100
-    min_pricetry = min(pricestry)
-
-    try_portfolio = Portfolio()
-    try_portfolio.initialize(namestry, pricestry, profitstry)
-
-    """ Tests data """
-
-
-    portfolio.initialize(names, prices, profits)
-
-    tree = Tree(portfolio.actions)
-
-    for num_action in range(len(names1)):
-        tree.define_choices_optimised(portfolio.actions[num_action], cap)
-        tree.grow()
-        print(tree.nodes[-1])
-
-
-    """    tree = BigTree(try_portfolio.actions)
-    tree.initialize()
-    print('Step 1: ', len(tree.opened_nodes))
-    tree.explore(try_cap)
-    print('Step 2', len(tree.opened_nodes))
-    tree.explore(try_cap)
-    print('Step 3', len(tree.opened_nodes))
-    tree.explore(try_cap)
-    print('Step 4', len(tree.opened_nodes))
-    tree.explore(try_cap)
-    print('Step 5', len(tree.opened_nodes))
-    tree.explore(try_cap)
-    print('Step 6', len(tree.opened_nodes))
-    tree.explore(try_cap)
-    print('Step 7', len(tree.opened_nodes))
-    tree.explore(try_cap)
-    print('Step 8', len(tree.opened_nodes))
-    tree.explore(try_cap)
-    print('Step 9', len(tree.opened_nodes))
-    tree.explore(try_cap)
-    print('Step 10', len(tree.opened_nodes))
-    tree.explore(try_cap)
-
-    print(tree.branch[0])
-    print(len(tree.branch))"""
 
