@@ -202,8 +202,7 @@ if __name__ == '__main__':
     try_portfolio = Portfolio()
     try_portfolio.initialize(namestry, pricestry, profitstry)
     try_tree = Tree(try_portfolio.actions)
-    #sort_results(try_tree.knapsack(captry))"""
-    """ data """
+    #sort_results(try_tree.knapsack(captry))
 
     names, prices, profits = import_actions_data('dataForceBrute.csv')
     cap = 400
@@ -214,7 +213,7 @@ if __name__ == '__main__':
         next_nodes.append(Portfolio([action]))
     tree = Tree(portfolio.actions)
     cProfile.run('best_result(tree.knapsack(cap))')
-    """    tree = BigTree(try_portfolio.actions)
+    tree = BigTree(try_portfolio.actions)
     tree.initialize()
     print('Step 1: ', len(tree.opened_nodes))
     tree.explore(try_cap)

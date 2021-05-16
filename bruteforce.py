@@ -20,7 +20,7 @@ class Node:
         return display
 
 
-def knapsack(market, cap):
+def knapsack_node(market, cap):
     step = 0
     nodes = [Node(step, 0, 0, 0, [])]
     for action in market.actions:
@@ -60,16 +60,16 @@ def best_portfolio(nodes):
         return best_node
 
 
-if __name__ == '__main__':
+def results():
     cap0 = 500
-
     names, prices, profits = import_actions_data('dataForceBrute.csv')
     market1 = Portfolio([])
     market1.convert_to_action(names, prices, profits)
-
-    result = best_portfolio(knapsack(market1, cap0))
+    result = best_portfolio(knapsack_node(market1, cap0))
     print(result.composition)
     print(result.price)
     print(result.net_profit)
 
 
+if __name__ == '__main__':
+    cProfile.run('results()')

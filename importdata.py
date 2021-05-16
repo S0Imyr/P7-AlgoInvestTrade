@@ -15,3 +15,13 @@ def import_actions_data(file):
             if row[2] != 'profit':
                 profits.append(float(row[2]))
     return names, prices, profits
+
+
+def clean_up(portfolio):
+    available_actions = []
+    total_price = 0
+    for action in portfolio.actions:
+        if action.price > 0 and action.profit > 0:
+            available_actions.append(action)
+            total_price += action.price
+    portfolio.actions = available_actions
