@@ -2,6 +2,7 @@ from utils import display_cell_length
 
 
 class Action:
+    """Create an action object and calculate the net_profit"""
     def __init__(self, name, price, profit):
         self.name = name
         self.price = price
@@ -15,6 +16,7 @@ class Action:
 
 
 class Portfolio:
+    """Create a protfolio object with multiple actions"""
     def __init__(self, actions):
         self.actions = actions
 
@@ -28,7 +30,8 @@ class Portfolio:
                        + display_cell_length(action.profit, 12) + '\n'
         return display
 
-    def convert_to_action(self, names, prices, profits):
+    def add_actions(self, names, prices, profits):
+        """Check if the data can be converted into actions and then add them to the portfolio"""
         if len(names) != len(prices) or len(names) != len(profits) or len(prices) != len(profits):
             print("The prices data and the profits data must coincide. The number of element don't match")
         else:

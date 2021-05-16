@@ -2,9 +2,8 @@ import csv
 
 
 def import_actions_data(file):
-    names = []
-    prices = []
-    profits = []
+    """Import shares data from a file and return three lists of names, prices, profits"""
+    names, prices, profits = [], [], []
     with open(file, newline='') as csvfile:
         data = csv.reader(csvfile, delimiter=',')
         for row in data:
@@ -18,6 +17,7 @@ def import_actions_data(file):
 
 
 def clean_up(portfolio):
+    """ With a portfolio of shares, select the shares where price and profit are both strictly positives"""
     available_actions = []
     total_price = 0
     for action in portfolio.actions:
