@@ -11,7 +11,7 @@ class Action:
     def __repr__(self):
         return f'Action {self.name}: \n' \
                f'Price: {self.price} \n' \
-               f'Profit: {self.profit}'
+               f'Profit: {self.profit}%'
 
 
 class Portfolio:
