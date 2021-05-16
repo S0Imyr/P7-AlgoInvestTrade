@@ -17,8 +17,8 @@ class Action:
 
 class Portfolio:
     """Create a protfolio object with multiple actions"""
-    def __init__(self, actions):
-        self.actions = actions
+    def __init__(self):
+        self.actions = []
 
     def __repr__(self):
         display = display_cell_length('Action', 12) + ' | ' \
@@ -33,11 +33,7 @@ class Portfolio:
     def add_actions(self, names, prices, profits):
         """Check if the data can be converted into actions and then add them to the portfolio"""
         if len(names) != len(prices) or len(names) != len(profits) or len(prices) != len(profits):
-            print("The prices data and the profits data must coincide. The number of element don't match")
+            raise ValueError("The prices data and the profits data must coincide. The number of element don't match")
         else:
             for action in range(len(names)):
                 self.actions.append(Action(names[action], prices[action], profits[action]))
-
-
-if __name__ == '__main__':
-    pass
