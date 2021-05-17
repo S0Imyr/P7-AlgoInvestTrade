@@ -1,5 +1,7 @@
 import math
 import cProfile
+import itertools
+from os import popen
 
 from finance import Portfolio
 from importdata import import_actions_data
@@ -20,7 +22,8 @@ class Node:
         return display
 
 
-def knapsack_node(market, cap):
+
+def list_branches(market, cap):
     step = 0
     nodes = [Node(step, 0, 0, 0, [])]
     for action in market.actions:
@@ -43,33 +46,67 @@ def knapsack_node(market, cap):
     return nodes
 
 
-def best_portfolio(nodes):
-    best_node = Node(0, 0, math.inf, 0, [])
-    best_nodes = [best_node]
+def best_branch_portfolio(nodes):
+    best_branch = Node(0, 0, math.inf, 0, [])
+    best_branches = [best_branch]
     for node in nodes:
-        if node.net_profit > best_node.net_profit:
-            best_node = node
-        elif node.net_profit == best_node.net_profit:
-            if node.price < best_node.price:
-                best_node = node
-            elif node.price == best_node.price:
-                best_nodes.append(node)
-    if len(best_nodes) > 1:
-        return best_nodes
+        if node.net_profit > best_branch.net_profit:
+            best_branch= node
+        elif node.net_profit == best_branch.net_profit:
+            if node.price < best_branch.price:
+                best_branch = node
+            elif node.price == best_branch.price:
+                best_branches.append(node)
+    if len(best_branches) > 1:
+        return best_branches
     else:
-        return best_node
+        return best_branch
 
 
-def results():
-    cap0 = 500
-    names, prices, profits = import_actions_data('dataForceBrute.csv')
-    market1 = Portfolio([])
-    market1.convert_to_action(names, prices, profits)
-    result = best_portfolio(knapsack_node(market1, cap0))
-    print(result.composition)
-    print(result.price)
-    print(result.net_profit)
+def list_portfolios(market):
+    portfolios = []
+    for i in range(len(market)):
+        portfolios.extend(itertools.combinations(market, i))
+    return portfolios
+
+
+def best_portfolios(portfolios, cap):
+    best_portfolio = Portfolio()
+    for portfolio in portfolios:
+        portfolio_price = 0
+        portfolio_profit = 0
+        for action in portfolio:
+            portfolio_price += action.price
+            portfolio_profit += action.net_profit
+        if portfolio_price <= cap and portfolio_profit > best_portfolio.profit:
+            best_portfolio = Portfolio()
+            best_portfolio.actions = portfolio
+            best_portfolio.price = portfolio_price
+            best_portfolio.profit = portfolio_profit
+    return best_portfolio
+
+def display_best_portfolio(portfolio):
+    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{portfolio} \nPour un prix total de {portfolio.price} \nPour un profit total de {portfolio.profit}")
+
+def display_best_branch(branch):
+    composition = ""
+    for action in branch.composition:
+        composition += f"{action} \n"
+    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{composition} \nPour un prix total de {branch.price} \nPour un profit total de {branch.net_profit}")
 
 
 if __name__ == '__main__':
-    cProfile.run('results()')
+    "cProfile.run('results()')"
+    data_file='data/dataForceBrute.csv'
+    cap0 = 500
+    names, prices, profits = import_actions_data(data_file)
+    market = Portfolio()
+    market.add_data_actions(names, prices, profits)
+    all_possible_portfolio = list_portfolios(market.actions)
+    best_portfolio = best_portfolios(all_possible_portfolio, cap0)
+    display_best_portfolio(best_portfolio)
+
+    branches = list_branches(market, cap0)
+    branch = best_branch_portfolio(branches)
+    display_best_branch(branch)
+
