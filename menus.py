@@ -1,3 +1,6 @@
+from bruteforce import bruteforce
+from optimised import greedy
+
 class Menu:
     def __init__(self, name):
         self.name = name
@@ -22,12 +25,12 @@ class Menu:
             choice = input("\nChoissisez une option en inscrivant "
                            "le nombre associé \n")
             try:
-                choice = int(choice)
+                self.choice = int(choice)
             except ValueError:
                 print("Entrée invalide, donnez l'un des indices de menu")
 
-            if choice in range(len(self.menus)):
-                return self.menus[choice]
+            if self.choice in range(len(self.menus)):
+                return self.menus[self.choice]
 
 
 class BrowseMenus:
@@ -63,11 +66,10 @@ class DataMenu:
         self.menu = Menu("Données")
 
     def __call__(self):
-        self.menu.add("Portefeuille réduit", MethodMenu(0))
-        self.menu.add("Dataset1", MethodMenu(1))
-        self.menu.add("Dataset2", MethodMenu(2))
+        self.menu.add("Portefeuille réduit", MethodMenu(data="data\dataForceBrute.csv"))
+        self.menu.add("Dataset1", MethodMenu(data="data\dataset1_Python+P7.csv"))
+        self.menu.add("Dataset2", MethodMenu(data="data\dataset2_Python+P7.csv"))
         self.menu.add("Quitter", ExitMenu())
-        self.menu.display_menu()
         user_choice = self.menu.get_user_choice()
         return user_choice()
 
@@ -78,11 +80,24 @@ class MethodMenu:
         self.data = data
 
     def __call__(self):
-        self.menu.add("Force brute", MethodMenu(0))
-        self.menu.add("Glouton", MethodMenu(1))
+        self.menu.add("Force brute", MethodMenu(data=self.data))
+        self.menu.add("Glouton", MethodMenu(data=self.data))
         self.menu.add("Quitter", ExitMenu())
-        self.menu.display_menu()
         user_choice = self.menu.get_user_choice()
+        cap = 0
+        while cap <= 0:
+            cap = input("Quel est le montant maximal pour le portefeuille ?")
+            try:
+                float(cap)
+                if cap <= 0:
+                    print("Le montant doit être positif")
+            except ValueError:
+                print("Veuillez donner un nombre décimal")
+        if self.menu.choice == 0:
+            bruteforce(data_file=self.data, cap=cap)
+        elif self.menu.choice == 1:
+            greedy(data_file=self.data, cap=cap)
+
         return user_choice()
 
 
