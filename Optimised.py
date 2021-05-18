@@ -10,7 +10,7 @@ def greedy(market, cap):
     actions_sorted_by_profit = sorted(market.actions, key=attrgetter("profit"), reverse=True)
     portfolio = Portfolio()
     for action in actions_sorted_by_profit:
-        if portfolio.price < cap:
+        if portfolio.price + action.price < cap:
             portfolio.add_actions([action])
     return portfolio
 

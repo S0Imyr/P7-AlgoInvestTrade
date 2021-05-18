@@ -25,7 +25,7 @@ class Menu:
         """ Asks to input the key corresponding to the desired option. """
         while True:
             self.display_menu()
-            choice = input("\nChoissisez une option en inscrivant "
+            choice = input("Choissisez une option en inscrivant "
                            "le nombre associé \n")
             try:
                 self.choice = int(choice)
@@ -85,10 +85,13 @@ class MethodMenu:
     def __call__(self):
         self.menu.add("Force brute", MethodMenu(data_file=self.data_file))
         self.menu.add("Glouton", MethodMenu(data_file=self.data_file))
+        self.menu.add("Retour au menu principal", HomeMenu())
         self.menu.add("Quitter", ExitMenu())
         user_choice = self.menu.get_user_choice()
         market = import_actions_data(file=self.data_file)
         cap = 0
+        if isinstance(user_choice, ExitMenu) or isinstance(user_choice, HomeMenu):
+            return user_choice()
         while cap <= 0:
             cap = input("Quel est le montant maximal pour le portefeuille ?")
             try:
@@ -99,10 +102,9 @@ class MethodMenu:
                 print("Veuillez donner un nombre décimal")
         if self.menu.choice == 0:
             portfolio = bruteforce(market, cap=cap)
-            display_best_portfolio(portfolio)
         elif self.menu.choice == 1:
             portfolio = greedy(market=market, cap=cap)
-            display_best_portfolio(portfolio)
+        display_best_portfolio(portfolio)
         return user_choice()
 
 
