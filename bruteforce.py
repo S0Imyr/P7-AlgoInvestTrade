@@ -95,18 +95,23 @@ def display_best_branch(branch):
     print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{composition} \nPour un prix total de {branch.price} \nPour un profit total de {branch.net_profit}")
 
 
-if __name__ == '__main__':
-    "cProfile.run('results()')"
-    data_file='data/dataForceBrute.csv'
-    cap0 = 500
+def bruteforce(data_file, cap):
     names, prices, profits = import_actions_data(data_file)
     market = Portfolio()
     market.add_data_actions(names, prices, profits)
     all_possible_portfolio = list_portfolios(market.actions)
-    best_portfolio = best_portfolios(all_possible_portfolio, cap0)
+    best_portfolio = best_portfolios(all_possible_portfolio, cap)
     display_best_portfolio(best_portfolio)
 
-    branches = list_branches(market, cap0)
+
+if __name__ == '__main__':
+    "cProfile.run('results()')"
+    data_file='data/dataForceBrute.csv'
+    cap = 500
+    names, prices, profits = import_actions_data(data_file)
+    market = Portfolio()
+    market.add_data_actions(names, prices, profits)
+    branches = list_branches(market, cap)
     branch = best_branch_portfolio(branches)
     display_best_branch(branch)
 
