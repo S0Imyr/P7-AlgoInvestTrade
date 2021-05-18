@@ -94,10 +94,7 @@ def display_best_branch(branch):
     print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{composition} \nPour un prix total de {branch.price} \nPour un profit total de {branch.net_profit}")
 
 
-def bruteforce(data_file, cap):
-    names, prices, profits = import_actions_data(data_file)
-    market = Portfolio()
-    market.add_data_actions(names, prices, profits)
+def bruteforce(market, cap):
     all_possible_portfolio = list_portfolios(market.actions)
     best_portfolio = best_portfolios(all_possible_portfolio, cap)
     display_best_portfolio(best_portfolio)

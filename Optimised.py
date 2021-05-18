@@ -3,10 +3,10 @@ import cProfile
 from finance import Portfolio
 from operator import attrgetter
 from importdata import import_actions_data, clean_up
-from bruteforce import best_portfolio, knapsack
+from bruteforce import best_portfolio, bruteforce, knapsack
 
 
-def fill_with_best_actions(market, cap):
+def greedy(market, cap):
     actions_sorted_by_profit = sorted(market.actions, key=attrgetter("profit"), reverse=True)
     portfolio = Portfolio()
     for action in actions_sorted_by_profit:
@@ -57,12 +57,9 @@ def knapsack_Memoization(prices, val, price_cap, n):
         return t[n][price_cap]
 
 
-def greedy(data_file, cap):
-    names, prices, profits = import_actions_data(data_file)
-    market = Portfolio()
-    market.add_data_actions(names, prices, profits)
-    clean_up(market)
-    portfolio = fill_with_best_actions(market, cap)
+def bruteforce_with_n_best_actions(market, cap, n):
+    market_selection = n_best_actions(market, n)
+    portfolio = bruteforce(market_selection, cap)
     return portfolio
 
 
