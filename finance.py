@@ -42,3 +42,9 @@ class Portfolio:
                 self.price += prices[action]
                 self.profit += prices[action] * profits[action]
 
+    def add_actions(self, actions):
+        self.actions.extend(actions)
+        for action in actions:
+            self.price += action.price
+            self.profit += action.net_profit
+

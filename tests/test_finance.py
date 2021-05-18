@@ -16,17 +16,17 @@ class TestPortfolio:
     def setup_method(self):
         self.portfolio = Portfolio()
     
-    def test_add_valid_actions_portfolio(self):
+    def test_add_valid_data_actions_portfolio(self):
         n0 = len(self.portfolio.actions)
         names = ['share1', 'share2', 'share3']
         prices = [15, 20, 50]
         profits = [5, 15, 2]
-        self.portfolio.add_actions(names, prices, profits)
+        self.portfolio.add_data_actions(names, prices, profits)
         assert len(self.portfolio.actions) - n0 == len(['share1', 'share2', 'share3'])
 
-    def test_add_invalid_actions_portfolio(self):
+    def test_add_invalid_data_actions_portfolio(self):
         names = ['share1', 'share3']
         prices = [15, 20, 50]
         profits = [5, 15]
         with pytest.raises(ValueError):
-            self.portfolio.add_actions(names, prices, profits)
+            self.portfolio.add_data_actions(names, prices, profits)

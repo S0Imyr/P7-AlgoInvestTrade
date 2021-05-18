@@ -1,5 +1,4 @@
 import math
-import cProfile
 import itertools
 from os import popen
 
@@ -105,6 +104,7 @@ def bruteforce(data_file, cap):
 
 
 if __name__ == '__main__':
+    import cProfile
     "cProfile.run('results()')"
     data_file='data/dataForceBrute.csv'
     cap = 500

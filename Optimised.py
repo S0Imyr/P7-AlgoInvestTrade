@@ -6,7 +6,16 @@ from importdata import import_actions_data, clean_up
 from bruteforce import best_portfolio, knapsack
 
 
-def select(portfolio, num_select):
+def fill_with_best_actions(market, cap):
+    actions_sorted_by_profit = sorted(market.actions, key=attrgetter("profit"), reverse=True)
+    portfolio = Portfolio()
+    for action in actions_sorted_by_profit:
+        if portfolio.price < cap:
+            portfolio.add_actions([action])
+    return portfolio
+
+
+def n_best_actions(portfolio, num_select):
     sorted_action_by_profit = sorted(portfolio.actions, key=attrgetter("profit"), reverse=True)
     return Portfolio(sorted_action_by_profit[:num_select])
 
@@ -47,17 +56,14 @@ def knapsack_Memoization(prices, val, price_cap, n):
         t[n][price_cap] = knapsack_Memoization(prices, val, price_cap, n-1)
         return t[n][price_cap]
 
-def resultsdata1():
-    cap0 = 500
-    names, prices, profits = import_actions_data('dataset1_Python+P7.csv')
-    market1 = Portfolio([])
-    market1.convert_to_action(names, prices, profits)
-    clean_up(market1)
-    select_market1 = select(market1, 23)
-    result = best_portfolio(knapsack(select_market1, cap0))
-    print(result.composition)
-    print(result.price)
-    print(result.net_profit)
+
+def greedy(data_file, cap):
+    names, prices, profits = import_actions_data(data_file)
+    market = Portfolio()
+    market.add_data_actions(names, prices, profits)
+    clean_up(market)
+    portfolio = fill_with_best_actions(market, cap)
+    return portfolio
 
 
 def resultsdata2():
@@ -66,7 +72,7 @@ def resultsdata2():
     market2 = Portfolio([])
     market2.convert_to_action(names, prices, profits)
     clean_up(market2)
-    select_market2 = select(market2, 23)
+    select_market2 = n_best_actions(market2, 23)
     result = best_portfolio(knapsack(select_market2, cap0))
     print(result.composition)
     print(result.price)
