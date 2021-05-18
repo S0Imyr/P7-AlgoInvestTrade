@@ -1,5 +1,8 @@
+from importdata import import_actions_data
 from bruteforce import bruteforce
 from optimised import greedy
+from views import display_best_portfolio, display_best_branch
+
 
 class Menu:
     def __init__(self, name):
@@ -66,38 +69,40 @@ class DataMenu:
         self.menu = Menu("Données")
 
     def __call__(self):
-        self.menu.add("Portefeuille réduit", MethodMenu(data="data\dataForceBrute.csv"))
-        self.menu.add("Dataset1", MethodMenu(data="data\dataset1_Python+P7.csv"))
-        self.menu.add("Dataset2", MethodMenu(data="data\dataset2_Python+P7.csv"))
+        self.menu.add("Portefeuille réduit", MethodMenu(data_file="data\dataForceBrute.csv"))
+        self.menu.add("Dataset1", MethodMenu(data_file="data\dataset1_Python+P7.csv"))
+        self.menu.add("Dataset2", MethodMenu(data_file="data\dataset2_Python+P7.csv"))
         self.menu.add("Quitter", ExitMenu())
         user_choice = self.menu.get_user_choice()
         return user_choice()
 
 
 class MethodMenu:
-    def __init__(self, data):
+    def __init__(self, data_file):
         self.menu = Menu("Méthode")
-        self.data = data
+        self.data_file = data_file
 
     def __call__(self):
-        self.menu.add("Force brute", MethodMenu(data=self.data))
-        self.menu.add("Glouton", MethodMenu(data=self.data))
+        self.menu.add("Force brute", MethodMenu(data_file=self.data_file))
+        self.menu.add("Glouton", MethodMenu(data_file=self.data_file))
         self.menu.add("Quitter", ExitMenu())
         user_choice = self.menu.get_user_choice()
+        market = import_actions_data(file=self.data_file)
         cap = 0
         while cap <= 0:
             cap = input("Quel est le montant maximal pour le portefeuille ?")
             try:
-                float(cap)
+                cap = float(cap)
                 if cap <= 0:
                     print("Le montant doit être positif")
             except ValueError:
                 print("Veuillez donner un nombre décimal")
         if self.menu.choice == 0:
-            bruteforce(data_file=self.data, cap=cap)
+            portfolio = bruteforce(market, cap=cap)
+            display_best_portfolio(portfolio)
         elif self.menu.choice == 1:
-            greedy(data_file=self.data, cap=cap)
-
+            portfolio = greedy(market=market, cap=cap)
+            display_best_portfolio(portfolio)
         return user_choice()
 
 

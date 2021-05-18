@@ -21,7 +21,6 @@ class Node:
         return display
 
 
-
 def list_branches(market, cap):
     step = 0
     nodes = [Node(step, 0, 0, 0, [])]
@@ -84,24 +83,16 @@ def best_portfolios(portfolios, cap):
             best_portfolio.profit = portfolio_profit
     return best_portfolio
 
-def display_best_portfolio(portfolio):
-    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{portfolio} \nPour un prix total de {portfolio.price} \nPour un profit total de {portfolio.profit}")
-
-def display_best_branch(branch):
-    composition = ""
-    for action in branch.composition:
-        composition += f"{action} \n"
-    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{composition} \nPour un prix total de {branch.price} \nPour un profit total de {branch.net_profit}")
-
 
 def bruteforce(market, cap):
     all_possible_portfolio = list_portfolios(market.actions)
     best_portfolio = best_portfolios(all_possible_portfolio, cap)
-    display_best_portfolio(best_portfolio)
+    return best_portfolio
 
 
 if __name__ == '__main__':
     import cProfile
+    from views import display_best_branch
     "cProfile.run('results()')"
     data_file='data/dataForceBrute.csv'
     cap = 500

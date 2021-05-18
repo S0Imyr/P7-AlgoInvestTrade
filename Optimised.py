@@ -3,7 +3,7 @@ import cProfile
 from finance import Portfolio
 from operator import attrgetter
 from importdata import import_actions_data, clean_up
-from bruteforce import best_portfolio, bruteforce, knapsack
+from bruteforce import bruteforce
 
 
 def greedy(market, cap):
@@ -70,10 +70,10 @@ def resultsdata2():
     market2.convert_to_action(names, prices, profits)
     clean_up(market2)
     select_market2 = n_best_actions(market2, 23)
-    result = best_portfolio(knapsack(select_market2, cap0))
+    """result = best_portfolio(knapsack(select_market2, cap0))
     print(result.composition)
     print(result.price)
-    print(result.net_profit)
+    print(result.net_profit)"""
 
 
 if __name__ == '__main__':
