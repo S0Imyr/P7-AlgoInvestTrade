@@ -16,8 +16,9 @@ def greedy(market, cap):
 
 
 def n_best_actions(portfolio, num_select):
-    sorted_action_by_profit = sorted(portfolio.actions, key=attrgetter("profit"), reverse=True)
-    return Portfolio(sorted_action_by_profit[:num_select])
+    portfolio_select = Portfolio()
+    portfolio_select.actions = sorted(portfolio.actions, key=attrgetter("profit"), reverse=True)[:num_select]
+    return portfolio_select
 
 
 def knapSack_DP(price_cap, prices, profits, number_of_shares):

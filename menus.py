@@ -1,6 +1,6 @@
 from importdata import import_actions_data
 from bruteforce import bruteforce
-from optimised import greedy
+from optimised import greedy, bruteforce_with_n_best_actions
 from views import display_best_portfolio, display_best_branch
 
 
@@ -85,6 +85,7 @@ class MethodMenu:
     def __call__(self):
         self.menu.add("Force brute", MethodMenu(data_file=self.data_file))
         self.menu.add("Glouton", MethodMenu(data_file=self.data_file))
+        self.menu.add("Force brute sur les meilleurs profits (%)", MethodMenu(data_file=self.data_file))
         self.menu.add("Retour au menu principal", HomeMenu())
         self.menu.add("Quitter", ExitMenu())
         user_choice = self.menu.get_user_choice()
@@ -104,6 +105,17 @@ class MethodMenu:
             portfolio = bruteforce(market, cap=cap)
         elif self.menu.choice == 1:
             portfolio = greedy(market=market, cap=cap)
+        elif self.menu.choice == 2:
+            number_best_actions = 0
+            while number_best_actions <= 0:
+                number_best_actions = input("Sur quel nombre d'actions voulez vous travailler ?")
+                try:
+                    number_best_actions = int(number_best_actions)
+                    if number_best_actions <= 0:
+                        print("Le montant doit être positif")
+                except ValueError:
+                    print("Veuillez donner un nombre entier")
+            portfolio = bruteforce_with_n_best_actions(market=market, cap=cap, n=number_best_actions)
         display_best_portfolio(portfolio)
         return user_choice()
 
