@@ -1,3 +1,5 @@
+import time
+
 from importdata import import_actions_data
 from bruteforce import bruteforce
 from optimised import greedy, bruteforce_with_n_best_actions
@@ -119,6 +121,7 @@ class MethodMenu:
         if isinstance(user_choice, ExitMenu) or isinstance(user_choice, HomeMenu):
             return user_choice()
         cap = input_cap()
+        start_time = time.time()
         if self.menu.choice == 0:
             portfolio = bruteforce(market, cap=cap)
         elif self.menu.choice == 1:
@@ -126,7 +129,9 @@ class MethodMenu:
         elif self.menu.choice == 2:
             number_best_actions = input_number_of_actions()
             portfolio = bruteforce_with_n_best_actions(market=market, cap=cap, n=number_best_actions)
+        end_time = time.time()
         display_best_portfolio(portfolio)
+        print(f"Temps d'exécution : {(end_time - start_time)//60} min {(end_time - start_time)%60} s.")
         return user_choice()
 
 
