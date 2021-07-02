@@ -131,7 +131,7 @@ class MethodMenu:
             portfolio = bruteforce_with_n_best_actions(market=market, cap=cap, n=number_best_actions)
         end_time = time.time()
         display_best_portfolio(portfolio)
-        print(f"Temps d'exécution : {(end_time - start_time)//60} min {(end_time - start_time)%60} s.")
+        print(f"Temps d'exécution : {int((end_time - start_time)//60)} min {(end_time - start_time)%60} s.")
         return user_choice()
 
 
