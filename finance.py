@@ -48,3 +48,14 @@ class Portfolio:
             self.price += action.price
             self.profit += action.net_profit
 
+    def prices(self):
+        prices_list = []
+        for action in self.actions:
+            prices_list.append(action.price)
+        return prices_list
+
+    def net_profits(self):
+        profits_list = []
+        for action in self.actions:
+            profits_list.append(action.profit * action.price / 100)
+        return profits_list
