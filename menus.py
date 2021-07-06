@@ -2,35 +2,44 @@ import time
 
 from importdata import import_actions_data
 from bruteforce import bruteforce
-from optimised import greedy, bruteforce_with_n_best_actions
-from views import display_best_portfolio, display_best_branch
+from optimised import KS_dynamic, greedy, bruteforce_with_n_best_actions
+from views import display_best_portfolio
 
 
 def input_cap():
     cap = 0
     while cap <= 0:
-        cap = input("Quel est le montant maximal pour le portefeuille ?")
+        cap = input("Quel est le montant maximal pour le portefeuille ? \n")
         try:
             cap = float(cap)
             if cap <= 0:
-                print("Le montant doit être positif")
+                print("Le montant doit être positif.")
         except ValueError:
-            print("Veuillez donner un nombre décimal")
+            print("Veuillez donner un nombre décimal.")
     return cap
 
 
 def input_number_of_actions():
     number_best_actions = 0
     while number_best_actions <= 0:
-        number_best_actions = input("Sur quel nombre d'actions voulez vous travailler ?")
+        number_best_actions = input("Sur quel nombre d'actions voulez vous travailler ? \n")
         try:
             number_best_actions = int(number_best_actions)
             if number_best_actions <= 0:
-                print("Le montant doit être positif")
+                print("Le montant doit être positif.")
         except ValueError:
-            print("Veuillez donner un nombre entier")
+            print("Veuillez donner un nombre entier.")
     return number_best_actions
 
+
+def input_number_of_decimals():
+    try:
+        number_of_decimals = int(input("Pour la précision sur les prix, combien de décimales ? \n"))
+        if number_of_decimals <= 0:
+            print("Le montant doit être positif.")
+    except ValueError:
+        print("Veuillez donner un nombre entier.")
+    return number_of_decimals
 
 class Menu:
     def __init__(self, name):
@@ -114,6 +123,7 @@ class MethodMenu:
         self.menu.add("Force brute", MethodMenu(data_file=self.data_file))
         self.menu.add("Glouton", MethodMenu(data_file=self.data_file))
         self.menu.add("Force brute sur les meilleurs profits (%)", MethodMenu(data_file=self.data_file))
+        self.menu.add("Programmation dynamique", MethodMenu(data_file=self.data_file))
         self.menu.add("Retour au menu principal", HomeMenu())
         self.menu.add("Quitter", ExitMenu())
         user_choice = self.menu.get_user_choice()
@@ -129,9 +139,12 @@ class MethodMenu:
         elif self.menu.choice == 2:
             number_best_actions = input_number_of_actions()
             portfolio = bruteforce_with_n_best_actions(market=market, cap=cap, n=number_best_actions)
+        elif self.menu.choice == 3:
+            number_of_decimals = input_number_of_decimals()
+            portfolio = KS_dynamic(market=market, cap=cap, ndigits=number_of_decimals)
         end_time = time.time()
         display_best_portfolio(portfolio)
-        print(f"Temps d'exécution : {int((end_time - start_time)//60)} min {(end_time - start_time)%60} s.")
+        print(f"Temps d'exécution : {int((end_time - start_time)//60)} min {int(round((end_time - start_time)%60, ndigits=0))} s.")
         return user_choice()
 
 
