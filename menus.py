@@ -2,7 +2,7 @@ import time
 
 from importdata import import_actions_data
 from bruteforce import bruteforce
-from optimised import KS_dynamic, greedy, bruteforce_with_n_best_actions
+from optimized import KS_dynamic, greedy, bruteforce_with_n_best_actions
 from views import display_best_portfolio
 
 
@@ -40,6 +40,7 @@ def input_number_of_decimals():
     except ValueError:
         print("Veuillez donner un nombre entier.")
     return number_of_decimals
+
 
 class Menu:
     def __init__(self, name):
