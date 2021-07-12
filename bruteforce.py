@@ -91,9 +91,7 @@ def bruteforce(market, cap):
 
 
 if __name__ == '__main__':
-    import cProfile
     from views import display_best_branch
-    "cProfile.run('results()')"
     data_file='data/dataForceBrute.csv'
     cap = 500
     names, prices, profits = import_actions_data(data_file)
