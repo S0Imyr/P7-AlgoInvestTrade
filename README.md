@@ -2,7 +2,7 @@
 
 
 ### Principe et configuration nécessaire :
-Il s'agit d'un programme qui à partir d'un portfeuille d'actions va sélectionner des actions avec le meilleur rendement pour un montant donné.
+Il s'agit d'un programme qui à partir d'un ensemble d'actions va sélectionner un portefeuille d'actions qui aura pour un montant donné, le meilleur rendement.
 Le programme permet de sélectionner les données, puis sélectionner la méthode.
 
 On distingue trois grandes méthodes :
