@@ -16,8 +16,8 @@ The first method should only be applied to a limited number of stocks (less than
 Open your terminal and navigate to your desired folder.
 
 Then follow these steps:
-1. Clone this repository by typing: `git clone https://github.com/S0Imyr/Projet-7.git`
-2. Access the newly created folder with the command: `cd Projet-7`
+1. Clone this repository by typing: `git clone https://github.com/S0Imyr/Optimized-Investment-Algorithm.git`
+2. Access the newly created folder with the command: `cd Optimized-Investment-Algorithm`
 3. Create a virtual environment for the project with
     - `python -m venv env` on Windows
     - or `python3 -m venv env` on macOS or Linux.
@@ -50,8 +50,8 @@ La première méthode ne doit être appliquée que sur un nombre d'action restre
 Sur le terminal se placer sur un dossier cible.
 
 Puis suivre les étapes suivantes :
-1. Cloner le dépôt ici présent en tapant: `git clone https://github.com/S0Imyr/Projet-7.git`
-2. Accéder au dossier ainsi créé avec la commande : `cd Projet-7`
+1. Cloner le dépôt ici présent en tapant: `git clone https://github.com/S0Imyr/Optimized-Investment-Algorithm.git`
+2. Accéder au dossier ainsi créé avec la commande : `cd Optimized-Investment-Algorithm`
 3. Créer un environnement virtuel pour le projet avec 
     - `python -m venv env` sous windows 
     - ou `python3 -m venv env` sous macos ou linux.
