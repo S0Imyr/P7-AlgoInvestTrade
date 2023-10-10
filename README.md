@@ -1,4 +1,4 @@
-# Projet-7
+# Optimized Investment Algorithms
 
 
 ### Principe et configuration nécessaire :
