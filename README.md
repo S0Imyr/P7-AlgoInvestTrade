@@ -1,6 +1,5 @@
 # Optimized Investment Algorithms
 
-
 ## 1. Summary :
 This is a program that, given a set of stocks, will select a portfolio of stocks that will yield the best return for a given amount. The program allows you to select the data and then choose the method.
 
@@ -16,7 +15,7 @@ The first method should only be applied to a limited number of stocks (less than
 Open your terminal and navigate to your desired folder.
 
 Then follow these steps:
-1. Clone this repository by typing: `git clone https://github.com/S0Imyr/Optimized-Investment-Algorithm.git`
+1. Clone this repository by typing: `git clone https://github.com/rlossec/Optimized-Investment-Algorithm.git`
 2. Access the newly created folder with the command: `cd Optimized-Investment-Algorithm`
 3. Create a virtual environment for the project with
     - `python -m venv env` on Windows
@@ -28,9 +27,8 @@ Then follow these steps:
 
 ## 3. Running the Program
 
-To run the program, type: `python main.py`
+To run the program, type in `src` directory: `python main.py`
 You can then navigate between the menus to select stocks and choose the method.
-
 
 # Algorithmes d'optimisation d'investissement
 
@@ -50,7 +48,7 @@ La première méthode ne doit être appliquée que sur un nombre d'action restre
 Sur le terminal se placer sur un dossier cible.
 
 Puis suivre les étapes suivantes :
-1. Cloner le dépôt ici présent en tapant: `git clone https://github.com/S0Imyr/Optimized-Investment-Algorithm.git`
+1. Cloner le dépôt ici présent en tapant: `git clone https://github.com/rlossec/Optimized-Investment-Algorithm.git`
 2. Accéder au dossier ainsi créé avec la commande : `cd Optimized-Investment-Algorithm`
 3. Créer un environnement virtuel pour le projet avec 
     - `python -m venv env` sous windows 
@@ -59,7 +57,6 @@ Puis suivre les étapes suivantes :
     - `source env/Scripts/activate` sous windows 
     - ou `source env/bin/activate` sous MacOS ou Linux.
 5. Installez les dépendances du projet avec la commande `pip install -r requirements.txt`
-
 
 ## 3. Lancement du programme
 
