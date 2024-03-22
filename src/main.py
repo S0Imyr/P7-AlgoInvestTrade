@@ -1,4 +1,4 @@
-from menus import BrowseMenus
+from terminal_interface.menus import BrowseMenus
 
 
 if __name__ == "__main__":

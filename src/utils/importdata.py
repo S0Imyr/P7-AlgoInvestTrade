@@ -1,9 +1,11 @@
 import csv
-from finance import Portfolio
+from typing import Tuple, List
+
+from models import Portfolio
 
 
-def clean_up(portfolio):
-    """ With a portfolio of shares, select the shares where price and profit are both strictly positives"""
+def select_positive_shares(portfolio: Portfolio) -> None:
+    """Select shares with positive prices and profits from the portfolio."""
     available_actions = []
     total_price = 0
     for action in portfolio.actions:
@@ -13,7 +15,7 @@ def clean_up(portfolio):
     portfolio.actions = available_actions
 
 
-def import_actions_data(file):
+def import_actions_data(file) -> Portfolio:
     """Import shares data from a file and return three lists of names, prices, profits"""
     names, prices, profits = [], [], []
     with open(file, newline='') as csvfile:
@@ -27,5 +29,5 @@ def import_actions_data(file):
                 profits.append(float(row[2]))
     market = Portfolio()
     market.add_data_actions(names, prices, profits)
-    clean_up(market)
+    select_positive_shares(market)
     return market

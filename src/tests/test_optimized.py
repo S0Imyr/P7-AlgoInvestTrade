@@ -1,4 +1,4 @@
-from optimized import dynamic_programming
+from algorithms.optimized import dynamic_programming
 
 
 def test_dynamic_programming():

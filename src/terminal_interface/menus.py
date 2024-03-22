@@ -1,9 +1,16 @@
 import time
 
-from importdata import import_actions_data
-from bruteforce import bruteforce
-from optimized import KS_dynamic, greedy, bruteforce_with_n_best_actions
-from views import display_best_portfolio
+from utils.importdata import import_actions_data
+from utils.views import display_best_portfolio
+
+from algorithms.bruteforce import bruteforce
+from algorithms.optimized import KS_dynamic, greedy, bruteforce_with_n_best_actions
+
+DATA_PATH = 'data/'
+
+DATA1 = "dataForceBrute.csv"
+DATA2 = "dataset1_Python+P7.csv"
+DATA3 = "dataset2_Python+P7.csv"
 
 
 def input_cap():
@@ -47,6 +54,7 @@ class Menu:
         self.name = name
         self.options = []
         self.menus = []
+        self.choice = None
 
     def add(self, option, menu):
         """ Allows to add entries and their handler to the menu"""
@@ -107,9 +115,9 @@ class DataMenu:
         self.menu = Menu("Données")
 
     def __call__(self):
-        self.menu.add("Portefeuille réduit", MethodMenu(data_file="data\dataForceBrute.csv"))
-        self.menu.add("Dataset1", MethodMenu(data_file="data\dataset1_Python+P7.csv"))
-        self.menu.add("Dataset2", MethodMenu(data_file="data\dataset2_Python+P7.csv"))
+        self.menu.add("Portefeuille réduit", MethodMenu(data_file=DATA_PATH + DATA1))
+        self.menu.add("Dataset1", MethodMenu(data_file=DATA_PATH + DATA2))
+        self.menu.add("Dataset2", MethodMenu(data_file=DATA_PATH + DATA3))
         self.menu.add("Quitter", ExitMenu())
         user_choice = self.menu.get_user_choice()
         return user_choice()

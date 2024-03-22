@@ -1,10 +1,7 @@
 import math
-import cProfile
 
-from finance import Portfolio
 from operator import attrgetter
-from utils import display_cell_length
-from importdata import import_actions_data
+from utils.utils import display_cell_length
 
 
 def how_many_shares(action_price, money):

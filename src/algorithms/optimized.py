@@ -2,8 +2,8 @@ import numpy as np
 import math
 from operator import attrgetter
 
-from finance import Portfolio
-from bruteforce import bruteforce
+from models import Portfolio
+from algorithms.bruteforce import bruteforce
 
 
 def greedy(market, cap):

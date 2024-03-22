@@ -1,9 +1,8 @@
 import math
 import itertools
-from os import popen
 
-from finance import Portfolio
-from importdata import import_actions_data
+from models import Portfolio
+from utils.importdata import import_actions_data
 
 
 class Node:
@@ -91,12 +90,10 @@ def bruteforce(market, cap):
 
 
 if __name__ == '__main__':
-    from views import display_best_branch
-    data_file='data/dataForceBrute.csv'
+    from utils.views import display_best_branch
+    data_file = 'src/data/dataForceBrute.csv'
     cap = 500
-    names, prices, profits = import_actions_data(data_file)
-    market = Portfolio()
-    market.add_data_actions(names, prices, profits)
+    market = import_actions_data(data_file)
     branches = list_branches(market, cap)
     branch = best_branch_portfolio(branches)
     display_best_branch(branch)

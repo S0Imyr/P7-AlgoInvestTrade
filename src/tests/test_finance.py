@@ -1,9 +1,10 @@
-from finance import Action, Portfolio
+from models import Share, Portfolio
 import pytest
+
 
 class TestAction:
     def setup_method(self):
-        self.action = Action("share1", 50, 5)
+        self.action = Share("share1", 50, 5)
 
     def test_net_profit(self):
         assert self.action.net_profit == 50 * 5 / 100

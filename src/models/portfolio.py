@@ -1,22 +1,9 @@
-from utils import display_cell_length
-
-
-class Action:
-    """Create an action object and calculate the net_profit"""
-    def __init__(self, name, price, profit):
-        self.name = name
-        self.price = price
-        self.profit = profit
-        self.net_profit = self.price * self.profit / 100
-
-    def __repr__(self):
-        return f'Action {self.name}: \n' \
-               f'Price: {self.price} \n' \
-               f'Profit: {self.profit}%'
+from models import Share
+from utils.utils import display_cell_length
 
 
 class Portfolio:
-    """Create a protfolio object with multiple actions"""
+    """Portfolio model"""
     def __init__(self):
         self.actions = []
         self.price = 0
@@ -38,7 +25,7 @@ class Portfolio:
             raise ValueError("The prices data and the profits data must coincide. The number of element don't match")
         else:
             for action in range(len(names)):
-                self.actions.append(Action(names[action], prices[action], profits[action]))
+                self.actions.append(Share(names[action], prices[action], profits[action]))
                 self.price += prices[action]
                 self.profit += prices[action] * profits[action]
 
