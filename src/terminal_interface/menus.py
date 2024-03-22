@@ -6,78 +6,50 @@ from utils.views import display_best_portfolio
 from algorithms.bruteforce import bruteforce
 from algorithms.optimized import KS_dynamic, greedy, bruteforce_with_n_best_actions
 
-DATA_PATH = 'data/'
+DATA_PATH = '../data/'
 
-DATA1 = "dataForceBrute.csv"
-DATA2 = "dataset1_Python+P7.csv"
-DATA3 = "dataset2_Python+P7.csv"
+REDUCE_PORTFOLIO_PATH = "dataForceBrute.csv"
+PORTFOLIO_1_PATH = "dataset1_Python+P7.csv"
+PORTFOLIO_2_PATH = "dataset2_Python+P7.csv"
 
 
-def input_cap():
-    cap = 0
-    while cap <= 0:
-        cap = input("Quel est le montant maximal pour le portefeuille ? \n")
+def input_positive_integer(message: str) -> int:
+    while True:
         try:
-            cap = float(cap)
-            if cap <= 0:
-                print("Le montant doit être positif.")
+            number = int(input(message))
+            if number <= 0:
+                print("Le nombre doit être positif.")
+            else:
+                return number
         except ValueError:
-            print("Veuillez donner un nombre décimal.")
-    return cap
-
-
-def input_number_of_actions():
-    number_best_actions = 0
-    while number_best_actions <= 0:
-        number_best_actions = input("Sur quel nombre d'actions voulez vous travailler ? \n")
-        try:
-            number_best_actions = int(number_best_actions)
-            if number_best_actions <= 0:
-                print("Le montant doit être positif.")
-        except ValueError:
-            print("Veuillez donner un nombre entier.")
-    return number_best_actions
-
-
-def input_number_of_decimals():
-    try:
-        number_of_decimals = int(input("Pour la précision sur les prix, combien de décimales ? \n"))
-        if number_of_decimals <= 0:
-            print("Le montant doit être positif.")
-    except ValueError:
-        print("Veuillez donner un nombre entier.")
-    return number_of_decimals
+            print("Veuillez entrer un nombre entier.")
 
 
 class Menu:
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
         self.options = []
         self.menus = []
-        self.choice = None
 
-    def add(self, option, menu):
+    def add(self, option: str, menu):
         """ Allows to add entries and their handler to the menu"""
         self.options.append(option)
         self.menus.append(menu)
 
-    def display_menu(self):
-        display = f"\n{self.name} : \n \n"
-        for key, option in enumerate(self.options):
-            display += f"{key}. {option}\n"
-        print(display)
+    def display(self) -> None:
+        print(f"\n{self.name} : \n")
+        for idx, option in enumerate(self.options):
+            print(f"{idx}. {option}")
 
     def get_user_choice(self):
         """ Asks to input the key corresponding to the desired option. """
         while True:
-            self.display_menu()
-            choice = input("Choissisez une option en inscrivant "
-                           "le nombre associé \n")
+            self.display()
             try:
-                self.choice = int(choice)
+                self.choice = int(input("Choissisez une option en inscrivant "
+                               "le nombre associé \n"))
             except ValueError:
                 print("Entrée invalide, donnez l'un des indices de menu")
-
             if self.choice in range(len(self.menus)):
                 return self.menus[self.choice]
 
@@ -115,9 +87,9 @@ class DataMenu:
         self.menu = Menu("Données")
 
     def __call__(self):
-        self.menu.add("Portefeuille réduit", MethodMenu(data_file=DATA_PATH + DATA1))
-        self.menu.add("Dataset1", MethodMenu(data_file=DATA_PATH + DATA2))
-        self.menu.add("Dataset2", MethodMenu(data_file=DATA_PATH + DATA3))
+        self.menu.add("Portefeuille réduit", MethodMenu(data_file=DATA_PATH + REDUCE_PORTFOLIO_PATH))
+        self.menu.add("Dataset1", MethodMenu(data_file=DATA_PATH + PORTFOLIO_1_PATH))
+        self.menu.add("Dataset2", MethodMenu(data_file=DATA_PATH + PORTFOLIO_2_PATH))
         self.menu.add("Quitter", ExitMenu())
         user_choice = self.menu.get_user_choice()
         return user_choice()
@@ -139,17 +111,17 @@ class MethodMenu:
         market = import_actions_data(file=self.data_file)
         if isinstance(user_choice, ExitMenu) or isinstance(user_choice, HomeMenu):
             return user_choice()
-        cap = input_cap()
+        cap = input_positive_integer("Quel est le montant maximal pour le portefeuille ? \n")
         start_time = time.time()
         if self.menu.choice == 0:
             portfolio = bruteforce(market, cap=cap)
         elif self.menu.choice == 1:
             portfolio = greedy(market=market, cap=cap)
         elif self.menu.choice == 2:
-            number_best_actions = input_number_of_actions()
+            number_best_actions = input_positive_integer("Sur quel nombre d'actions voulez vous travailler ? \n")
             portfolio = bruteforce_with_n_best_actions(market=market, cap=cap, n=number_best_actions)
         elif self.menu.choice == 3:
-            number_of_decimals = input_number_of_decimals()
+            number_of_decimals = input_positive_integer("Pour la précision sur les prix, combien de décimales ? \n")
             portfolio = KS_dynamic(market=market, cap=cap, ndigits=number_of_decimals)
         end_time = time.time()
         display_best_portfolio(portfolio)
@@ -162,3 +134,8 @@ class ExitMenu:
     def __call__(self):
         print("Aurevoir")
         exit()
+
+
+if __name__ == "__main__":
+    browse_menus = BrowseMenus()
+    browse_menus.start()
