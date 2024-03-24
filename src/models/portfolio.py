@@ -1,3 +1,5 @@
+from typing import List
+
 from models import Share
 from utils.utils import display_cell_length
 
@@ -46,3 +48,9 @@ class Portfolio:
         for action in self.actions:
             profits_list.append(action.profit * action.price / 100)
         return profits_list
+
+    def select_positive_actions(self) -> None:
+        """Select shares with positive prices and profits from the portfolio."""
+        positive_actions: List[Share] = [action for action in self.actions if
+                                         action.price > 0 and action.profit > 0]
+        self.actions = positive_actions

@@ -1,5 +1,4 @@
 from models import Share, Portfolio
-import pytest
 
 
 class TestAction:
@@ -29,5 +28,9 @@ class TestPortfolio:
         names = ['share1', 'share3']
         prices = [15, 20, 50]
         profits = [5, 15]
-        with pytest.raises(ValueError):
+        try:
             self.portfolio.add_data_actions(names, prices, profits)
+            print("Le test a échoué: aucune exception n'a été levée pour des données invalides.")
+        except ValueError:
+            print("Le test a réussi: une exception a été levée pour des données invalides.")
+

@@ -1,5 +1,4 @@
 import csv
-from typing import Tuple, List
 
 from models import Portfolio
 
@@ -29,5 +28,5 @@ def import_actions_data(file) -> Portfolio:
                 profits.append(float(row[2]))
     market = Portfolio()
     market.add_data_actions(names, prices, profits)
-    select_positive_shares(market)
+    market.select_positive_actions()
     return market

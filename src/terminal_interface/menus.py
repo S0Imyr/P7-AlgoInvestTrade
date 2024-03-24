@@ -1,5 +1,6 @@
 import time
 
+from utils import input_positive_integer
 from utils.importdata import import_actions_data
 from utils.views import display_best_portfolio
 
@@ -11,18 +12,6 @@ DATA_PATH = '../data/'
 REDUCE_PORTFOLIO_PATH = "dataForceBrute.csv"
 PORTFOLIO_1_PATH = "dataset1_Python+P7.csv"
 PORTFOLIO_2_PATH = "dataset2_Python+P7.csv"
-
-
-def input_positive_integer(message: str) -> int:
-    while True:
-        try:
-            number = int(input(message))
-            if number <= 0:
-                print("Le nombre doit être positif.")
-            else:
-                return number
-        except ValueError:
-            print("Veuillez entrer un nombre entier.")
 
 
 class Menu:
