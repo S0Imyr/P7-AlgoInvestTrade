@@ -1,13 +1,13 @@
 import time
 
-from utils import input_positive_integer
+from algorithms.tree import display_best_portfolio
 from utils.importdata import import_actions_data
-from utils.views import display_best_portfolio
 
 from algorithms.bruteforce import bruteforce
 from algorithms.optimized import KS_dynamic, greedy, bruteforce_with_n_best_actions
+from utils.utils import input_positive_integer
 
-DATA_PATH = '../data/'
+DATA_PATH = 'data/'
 
 REDUCE_PORTFOLIO_PATH = "dataForceBrute.csv"
 PORTFOLIO_1_PATH = "dataset1_Python+P7.csv"

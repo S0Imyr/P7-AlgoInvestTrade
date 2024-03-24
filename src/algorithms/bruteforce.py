@@ -1,5 +1,6 @@
 import math
 import itertools
+from typing import List, Tuple
 
 from models import Portfolio
 from utils.importdata import import_actions_data
@@ -13,14 +14,13 @@ class Node:
         self.net_profit = net_profit
         self.composition = composition
 
-    def __repr__(self):
-        display = f'Node ({self.height}, {self.width}) - '
-        display += f'Price : {self.price}\n' \
-                   f'Profit : {self.net_profit}\n'
-        return display
+    def __repr__(self) -> str:
+        return (f'Node ({self.height}, {self.width}) - '
+                f'Price: {self.price}\n'
+                f'Profit: {self.net_profit}\n')
 
 
-def list_branches(market, cap):
+def list_branches(market: Portfolio, cap: float) -> List[Node]:
     step = 0
     nodes = [Node(step, 0, 0, 0, [])]
     for action in market.actions:
@@ -60,11 +60,9 @@ def best_branch_portfolio(nodes):
         return best_branch
 
 
-def list_portfolios(market):
-    portfolios = []
-    for i in range(len(market)):
-        portfolios.extend(itertools.combinations(market, i))
-    return portfolios
+def list_portfolios(market: Portfolio) -> List[List[Tuple[str, float, float]]]:
+    """List all possible portfolios."""
+    return [list(portfolio) for i in range(len(market)) for portfolio in itertools.combinations(market.actions, i)]
 
 
 def best_portfolios(portfolios, cap):
@@ -90,11 +88,11 @@ def bruteforce(market, cap):
 
 
 if __name__ == '__main__':
-    from utils.views import display_best_branch
-    data_file = 'src/data/dataForceBrute.csv'
+
+    data_file = '../data/dataForceBrute.csv'
     cap = 500
     market = import_actions_data(data_file)
     branches = list_branches(market, cap)
+    print(list_portfolios(market))
     branch = best_branch_portfolio(branches)
-    display_best_branch(branch)
 

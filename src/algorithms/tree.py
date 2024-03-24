@@ -1,4 +1,6 @@
 import math
+from algorithms.bruteforce import list_branches, best_branch_portfolio
+from utils.importdata import import_actions_data
 
 
 def how_many_shares(action_price, money):
@@ -118,5 +120,57 @@ class Tree:
         return self.nodes[-1]
 
 
+def display_best_result(results):
+    best_node = TreeNode(0, 0, ShareChoice(0, 0, 0, {}), math.inf, 0)
+    best_nodes = [best_node]
+    for node in results:
+        if node.net_profit > best_node.net_profit:
+            best_node = node
+            best_nodes = [best_node]
+        elif node.net_profit == best_node.net_profit:
+            if node.price == node:
+                best_nodes.append(node)
+            elif node.price < best_node.price:
+                best_node = node
+                best_nodes = [best_node]
+    if len(best_nodes) > 1:
+        display = f"{len(best_nodes)} best results:\n"
+        for node in best_nodes:
+            composition = ""
+            for action, num in node.history.items():
+                if num != 0:
+                    composition += f"{num} {action} - "
+            display += composition[:-2] + '\n' \
+                       + str(node.price) + '\n' \
+                       + str(node.net_profit)
+    else:
+        display = ""
+        composition = ""
+        for action, num in best_node.history.items():
+            if num != 0:
+                composition += f"{num} {action} - "
+        display += composition[:-2] + '\n' \
+                   + str(best_node.price) + '\n' \
+                   + str(best_node.net_profit)
+    print(display)
+
+
+def display_best_portfolio(portfolio):
+    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{portfolio} \nPour un prix total de {portfolio.price} \nPour un profit total de {portfolio.profit}")
+
+
+def display_best_branch(branch):
+    composition = ""
+    for action in branch.composition:
+        composition += f"{action} \n"
+    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{composition} \nPour un prix total de {branch.price} \nPour un profit total de {branch.net_profit}")
+
+
 if __name__ == '__main__':
-    pass
+
+    data_file = '../data/dataForceBrute.csv'
+    cap = 500
+    market = import_actions_data(data_file)
+    branches = list_branches(market, cap)
+    branch = best_branch_portfolio(branches)
+    display_best_branch(branch)

@@ -3,15 +3,15 @@ import csv
 from models import Portfolio
 
 
-def select_positive_shares(portfolio: Portfolio) -> None:
-    """Select shares with positive prices and profits from the portfolio."""
-    available_actions = []
-    total_price = 0
-    for action in portfolio.actions:
-        if action.price > 0 and action.profit > 0:
-            available_actions.append(action)
-            total_price += action.price
-    portfolio.actions = available_actions
+# def select_positive_shares(portfolio: Portfolio) -> None:
+#     """Select shares with positive prices and profits from the portfolio."""
+#     available_actions = []
+#     total_price = 0
+#     for action in portfolio.actions:
+#         if action.price > 0 and action.profit > 0:
+#             available_actions.append(action)
+#             total_price += action.price
+#     portfolio.actions = available_actions
 
 
 def import_actions_data(file) -> Portfolio:
@@ -28,5 +28,5 @@ def import_actions_data(file) -> Portfolio:
                 profits.append(float(row[2]))
     market = Portfolio()
     market.add_data_actions(names, prices, profits)
-    market.select_positive_actions()
+    market.remove_ineffective_shares()
     return market
