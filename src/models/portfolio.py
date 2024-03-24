@@ -21,6 +21,9 @@ class Portfolio:
                        + display_cell_length(str(action.profit) + '%', 12) + '\n'
         return display
 
+    def __len__(self):
+        return len(self.actions)
+
     def add_data_actions(self, names, prices, profits):
         """Check if the data can be converted into actions and then add them to the portfolio"""
         if len(names) != len(prices) or len(names) != len(profits) or len(prices) != len(profits):
@@ -49,7 +52,7 @@ class Portfolio:
             profits_list.append(action.profit * action.price / 100)
         return profits_list
 
-    def select_positive_actions(self) -> None:
+    def remove_ineffective_shares(self) -> None:
         """Select shares with positive prices and profits from the portfolio."""
         positive_actions: List[Share] = [action for action in self.actions if
                                          action.price > 0 and action.profit > 0]
