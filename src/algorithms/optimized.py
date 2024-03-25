@@ -11,7 +11,7 @@ def greedy(market, cap):
     portfolio = Portfolio()
     for share in shares_sorted_by_profit:
         if portfolio.price + share.price < cap:
-            portfolio.add_shares([share])
+            portfolio.add_share(share)
     return portfolio
 
 

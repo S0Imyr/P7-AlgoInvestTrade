@@ -19,9 +19,21 @@ class TestShare(unittest.TestCase):
         share2 = Share("XYZ", 0, 0)
         self.assertEqual(share2.profit_amount, 0)
 
-        # Test with negative profit
-        share3 = Share("DEF", 20, -2)
-        self.assertEqual(share3.profit_amount, -0.4)
+    def test_invalid_share_creation(self):
+        # Test with negative price
+        with self.assertRaises(ValueError):
+            Share("Invalid", -10, 5)
+
+        # Test with negative profit percentage
+        with self.assertRaises(ValueError):
+            Share("Invalid", 10, -5)
+
+    def test_attributes_type(self):
+        # Test attribute types
+        share = Share("Company A", 100, 5)
+        self.assertIsInstance(share.name, str)
+        self.assertIsInstance(share.price, (int, float))
+        self.assertIsInstance(share.profit_percentage, (int, float))
 
 
 class TestPortfolio(unittest.TestCase):

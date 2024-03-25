@@ -36,11 +36,9 @@ class Portfolio:
         self.price += share.price
         self.profit_amount += share.profit_amount
 
-    def add_shares(self, shares):
-        self.shares.extend(shares)
+    def add_shares(self, shares: List[Share]):
         for share in shares:
-            self.price += share.price
-            self.profit_amount += share.profit_amount
+            self.add_share(share)
 
     def prices(self) -> List[float]:
         """Return a list of prices for all shares in the portfolio."""
@@ -50,15 +48,35 @@ class Portfolio:
         """Return a list of net profits for all shares in the portfolio."""
         return [share.profit_amount for share in self.shares]
 
+    # def add_shares_from_data(self, names, prices, profits):
+    #     """Check if the data can be converted into shares and then add them to the portfolio"""
+    #     if len(names) != len(prices) or len(names) != len(profits) or len(prices) != len(profits):
+    #         raise ValueError("The prices data and the profits data must coincide. The number of element don't match")
+    #     else:
+    #         for share_index in range(len(names)):
+    #             self.shares.append(Share(names[share_index], prices[share_index], profits[share_index]))
+    #             self.price += prices[share_index]
+    #             self.profit_amount += prices[share_index] * profits[share_index] / 100
+
     def add_shares_from_data(self, names, prices, profits):
         """Check if the data can be converted into shares and then add them to the portfolio"""
         if len(names) != len(prices) or len(names) != len(profits) or len(prices) != len(profits):
-            raise ValueError("The prices data and the profits data must coincide. The number of element don't match")
+            raise ValueError("The prices data and the profits data must coincide. The number of elements don't match")
         else:
-            for share_index in range(len(names)):
-                self.shares.append(Share(names[share_index], prices[share_index], profits[share_index]))
-                self.price += prices[share_index]
-                self.profit_amount += prices[share_index] * profits[share_index] / 100
+            num_shares = len(names)
+
+        ignored_data = []
+        for share_index in range(num_shares):
+            try:
+                new_share = Share(names[share_index], prices[share_index], profits[share_index])
+                self.add_share(new_share)
+            except ValueError:
+                ignored_data.append((names[share_index], prices[share_index], profits[share_index]))
+
+        if ignored_data:
+            print("Les données suivantes ont été ignorées car elles contiennent des valeurs négatives :")
+            for data in ignored_data:
+                print(f"Name: {data[0]}, Price: {data[1]}, Profit: {data[2]}")
 
     def update_portfolio_stats(self) -> None:
         """Update price and profit for the entire portfolio."""
@@ -101,5 +119,5 @@ if __name__ == '__main__':
     portfolio.add_shares_from_data(names, prices, profits)
     print("Nombre d'actions", len(portfolio.shares), 2)
     print('Prix', portfolio.price, 30)
-    print('Profit €', portfolio.profit_amount, 10 * 5 /100 + 20 * 10 / 100)    # 2.5
+    print('Profit €', portfolio.profit_amount, 10 * 5 / 100 + 20 * 10 / 100)    # 2.5
     print('Profit %', portfolio.profit_percentage, 2.5 / 30 * 100)             # 8.3333
