@@ -1,7 +1,7 @@
 import time
 
 from algorithms.tree import display_best_portfolio
-from utils.importdata import import_shares_data
+from utils.data_import import import_shares_data
 
 from algorithms.bruteforce import bruteforce
 from algorithms.optimized import KS_dynamic, greedy, bruteforce_with_n_best_shares

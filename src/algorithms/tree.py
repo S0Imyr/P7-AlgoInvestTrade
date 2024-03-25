@@ -1,6 +1,6 @@
 import math
 from algorithms.bruteforce import list_branches, best_branch_portfolio
-from utils.importdata import import_shares_data
+from utils.data_import import import_shares_data
 
 
 def how_many_shares(action_price, money):

@@ -3,7 +3,7 @@ import itertools
 from typing import List, Tuple
 
 from models import Portfolio
-from utils.importdata import import_shares_data
+from utils.data_import import import_shares_data
 
 
 class Node:
