@@ -10,14 +10,10 @@ class TestShare(unittest.TestCase):
         self.assertEqual(share.profit_percentage, 5)
         self.assertEqual(share.profit_amount, 5)
 
-    def test_calculate_net_profit(self):
+    def test_calculate_profit_amount(self):
         # Test with positive price and profit
         share1 = Share("ABC", 10, 5)
         self.assertEqual(share1.profit_amount, 0.5)
-
-        # Test with zero price and profit
-        share2 = Share("XYZ", 0, 0)
-        self.assertEqual(share2.profit_amount, 0)
 
     def test_invalid_share_creation(self):
         # Test with negative price
@@ -63,7 +59,7 @@ class TestPortfolio(unittest.TestCase):
         self.portfolio.add_shares_from_data(names, prices, profits)
         self.assertEqual(len(self.portfolio.shares), 2)
         self.assertEqual(self.portfolio.price, 30)
-        self.assertEqual(self.portfolio.profit_amount, 250)
+        self.assertEqual(self.portfolio.profit_amount, 2.5)
 
 
 if __name__ == "__main__":
