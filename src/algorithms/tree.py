@@ -45,9 +45,9 @@ class TreeNode:
         if not self.evaluated:
             if self.price == 0:
                 self.price = self.choice.price
-                self.net_profit = self.choice.profit * self.price
+                self.net_profit = self.choice.profit_percentage * self.price
             else:
-                self.net_profit += self.choice.price * self.choice.profit
+                self.net_profit += self.choice.price * self.choice.profit_percentage
                 self.price += self.choice.price
             self.evaluated = True
 
@@ -74,18 +74,18 @@ class Tree:
     def define_choices_optimised(self, action, cap):
         self.choices = []
         for i in range(how_many_shares(action.price, cap) + 1):
-            self.choices.append(ShareChoice(f"{i} action(s) {action.id}", i * action.price, action.profit, {action.id: i}))
+            self.choices.append(ShareChoice(f"{i} action(s) {action.id}", i * action.price, action.profit_percentage, {action.id: i}))
 
     def define_choices_brute(self):
         self.choices = []
         for action in self.actions:
-            self.choices.append(ShareChoice(action.id, action.price, action.profit, {action.id: 1}))
+            self.choices.append(ShareChoice(action.id, action.price, action.profit_percentage, {action.id: 1}))
 
     def define_choices_knapsack(self, step):
         self.choices = []
         action = self.actions[step]
         self.choices.append(ShareChoice(f"0 {action.id}", 0, 0, {action.id: 0}))
-        self.choices.append(ShareChoice(f"1 {action.id}", action.price, action.profit, {action.id: 1}))
+        self.choices.append(ShareChoice(f"1 {action.id}", action.price, action.profit_percentage, {action.id: 1}))
 
     def grow(self, cap):
         i = 0
@@ -124,10 +124,10 @@ def display_best_result(results):
     best_node = TreeNode(0, 0, ShareChoice(0, 0, 0, {}), math.inf, 0)
     best_nodes = [best_node]
     for node in results:
-        if node.net_profit > best_node.net_profit:
+        if node.profit_amount > best_node.net_profit:
             best_node = node
             best_nodes = [best_node]
-        elif node.net_profit == best_node.net_profit:
+        elif node.profit_amount == best_node.net_profit:
             if node.price == node:
                 best_nodes.append(node)
             elif node.price < best_node.price:
@@ -156,14 +156,14 @@ def display_best_result(results):
 
 
 def display_best_portfolio(portfolio):
-    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{portfolio} \nPour un prix total de {portfolio.price} \nPour un profit total de {portfolio.profit}")
+    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{portfolio} \nPour un prix total de {portfolio.price} \nPour un profit total de {portfolio.profit_percentage}")
 
 
 def display_best_branch(branch):
     composition = ""
     for action in branch.composition:
         composition += f"{action} \n"
-    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{composition} \nPour un prix total de {branch.price} \nPour un profit total de {branch.net_profit}")
+    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{composition} \nPour un prix total de {branch.price} \nPour un profit total de {branch.profit_amount}")
 
 
 if __name__ == '__main__':

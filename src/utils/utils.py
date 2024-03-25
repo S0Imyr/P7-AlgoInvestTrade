@@ -33,7 +33,7 @@ def display_sorted_results(results):
                 composition += f"{num} {share} - "
         display += (display_cell_length(composition[:-2], 50) + ' | '
                     + display_cell_length(node.price, 12) + ' | '
-                    + display_cell_length(node.net_profit, 12) + '\n')
+                    + display_cell_length(node.profit_amount, 12) + '\n')
     print(display)
 
 

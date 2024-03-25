@@ -27,6 +27,6 @@ def import_shares_data(file) -> Portfolio:
             if row[2] != 'profit':
                 profits.append(float(row[2]))
     market = Portfolio()
-    market.add_data_shares(names, prices, profits)
+    market.add_shares_from_data(names, prices, profits)
     market.remove_ineffective_shares()
     return market

@@ -32,7 +32,7 @@ def list_branches(market: Portfolio, cap: float) -> List[Node]:
             next_nodes.append(node)
             new_price = node.price + share.price
             if new_price < cap:
-                new_profit = node.net_profit + share.net_profit
+                new_profit = node.net_profit + share.profit_amount
                 new_composition = []
                 new_composition.extend(node.composition)
                 new_composition.append(share.name)
@@ -47,9 +47,9 @@ def best_branch_portfolio(nodes):
     best_branch = Node(0, 0, math.inf, 0, [])
     best_branches = [best_branch]
     for node in nodes:
-        if node.net_profit > best_branch.net_profit:
+        if node.profit_amount > best_branch.net_profit:
             best_branch= node
-        elif node.net_profit == best_branch.net_profit:
+        elif node.profit_amount == best_branch.net_profit:
             if node.price < best_branch.price:
                 best_branch = node
             elif node.price == best_branch.price:
@@ -72,12 +72,12 @@ def best_portfolios(portfolios, cap):
         portfolio_profit = 0
         for share in portfolio:
             portfolio_price += share.price
-            portfolio_profit += share.net_profit
-        if portfolio_price <= cap and portfolio_profit > best_portfolio.profit:
+            portfolio_profit += share.profit_amount
+        if portfolio_price <= cap and portfolio_profit > best_portfolio.profit_amount:
             best_portfolio = Portfolio()
             best_portfolio.shares = portfolio
             best_portfolio.price = portfolio_price
-            best_portfolio.profit = portfolio_profit
+            best_portfolio.profit_amount = portfolio_profit
     return best_portfolio
 
 

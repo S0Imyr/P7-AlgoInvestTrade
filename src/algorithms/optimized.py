@@ -7,7 +7,7 @@ from algorithms.bruteforce import bruteforce
 
 
 def greedy(market, cap):
-    shares_sorted_by_profit = sorted(market.shares, key=attrgetter("profit"), reverse=True)
+    shares_sorted_by_profit = sorted(market.shares, key=attrgetter("profit_percentage"), reverse=True)
     portfolio = Portfolio()
     for share in shares_sorted_by_profit:
         if portfolio.price + share.price < cap:
@@ -17,7 +17,7 @@ def greedy(market, cap):
 
 def n_best_shares(portfolio, num_select):
     portfolio_select = Portfolio()
-    portfolio_select.shares = sorted(portfolio.shares, key=attrgetter("profit"), reverse=True)[:num_select]
+    portfolio_select.shares = sorted(portfolio.shares, key=attrgetter("profit_percentage"), reverse=True)[:num_select]
     return portfolio_select
 
 

@@ -6,7 +6,7 @@ class TestShare:
         self.share = Share("share1", 50, 5)
 
     def test_net_profit(self):
-        assert self.share.net_profit == 50 * 5 / 100
+        assert self.share.profit_amount == 50 * 5 / 100
 
     def test_share_repr(self):
         assert self.share.__repr__() == "Action share1: \nPrice: 50 \nProfit: 5%"
@@ -21,7 +21,7 @@ class TestPortfolio:
         names = ['share1', 'share2', 'share3']
         prices = [15, 20, 50]
         profits = [5, 15, 2]
-        self.portfolio.add_data_shares(names, prices, profits)
+        self.portfolio.add_shares_from_data(names, prices, profits)
         assert len(self.portfolio.shares) - n0 == len(['share1', 'share2', 'share3'])
 
     def test_add_invalid_data_actions_portfolio(self):
@@ -29,7 +29,7 @@ class TestPortfolio:
         prices = [15, 20, 50]
         profits = [5, 15]
         try:
-            self.portfolio.add_data_shares(names, prices, profits)
+            self.portfolio.add_shares_from_data(names, prices, profits)
             print("Le test a échoué: aucune exception n'a été levée pour des données invalides.")
         except ValueError:
             print("Le test a réussi: une exception a été levée pour des données invalides.")

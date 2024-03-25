@@ -10,7 +10,7 @@ class Portfolio:
     def __init__(self):
         self.shares: List[Share] = []
         self.price: float = 0
-        self.profit: float = 0
+        self.profit_amount: float = 0
 
     def __repr__(self):
         display = display_cell_length('Action', 12) + ' | ' \
@@ -19,42 +19,87 @@ class Portfolio:
         for share in self.shares:
             display += display_cell_length(share.name, 12) + ' | ' \
                        + display_cell_length(share.price, 12) + ' | ' \
-                       + display_cell_length(str(share.profit) + '%', 12) + '\n'
+                       + display_cell_length(str(share.profit_percentage) + '%', 12) + '\n'
         return display
 
     def __len__(self):
         return len(self.shares)
 
-    def add_data_shares(self, names, prices, profits):
-        """Check if the data can be converted into shares and then add them to the portfolio"""
-        if len(names) != len(prices) or len(names) != len(profits) or len(prices) != len(profits):
-            raise ValueError("The prices data and the profits data must coincide. The number of element don't match")
-        else:
-            for share in range(len(names)):
-                self.shares.append(Share(names[share], prices[share], profits[share]))
-                self.price += prices[share]
-                self.profit += prices[share] * profits[share]
+    @property
+    def profit_percentage(self):
+        """Calculate and return the net profit."""
+        return self.profit_amount / self.price * 100
+
+    def add_share(self, share: Share) -> None:
+        """Add a share to the portfolio and update price and profit."""
+        self.shares.append(share)
+        self.price += share.price
+        self.profit_amount += share.profit_amount
 
     def add_shares(self, shares):
         self.shares.extend(shares)
         for share in shares:
             self.price += share.price
-            self.profit += share.net_profit
+            self.profit_amount += share.profit_amount
 
-    def prices(self):
-        prices_list = []
-        for share in self.shares:
-            prices_list.append(share.price)
-        return prices_list
+    def prices(self) -> List[float]:
+        """Return a list of prices for all shares in the portfolio."""
+        return [share.price for share in self.shares]
 
-    def net_profits(self):
-        profits_list = []
-        for share in self.shares:
-            profits_list.append(share.profit * share.price / 100)
-        return profits_list
+    def net_profits(self) -> List[float]:
+        """Return a list of net profits for all shares in the portfolio."""
+        return [share.profit_amount for share in self.shares]
+
+    def add_shares_from_data(self, names, prices, profits):
+        """Check if the data can be converted into shares and then add them to the portfolio"""
+        if len(names) != len(prices) or len(names) != len(profits) or len(prices) != len(profits):
+            raise ValueError("The prices data and the profits data must coincide. The number of element don't match")
+        else:
+            for share_index in range(len(names)):
+                self.shares.append(Share(names[share_index], prices[share_index], profits[share_index]))
+                self.price += prices[share_index]
+                self.profit_amount += prices[share_index] * profits[share_index] / 100
+
+    def update_portfolio_stats(self) -> None:
+        """Update price and profit for the entire portfolio."""
+        self.price = sum(share.price for share in self.shares)
+        self.profit_amount = sum(share.profit_amount for share in self.shares)
 
     def remove_ineffective_shares(self) -> None:
         """Select shares with positive prices and profits from the portfolio."""
         positive_shares: List[Share] = [share for share in self.shares if
-                                         share.price > 0 and share.profit > 0]
+                                        share.price > 0 and share.profit_percentage > 0]
         self.shares = positive_shares
+
+
+if __name__ == '__main__':
+
+    # test_create_portfolio
+    print("---- Test 1 ----")
+    portfolio = Portfolio()
+    print('Liste des actions', portfolio.shares, [])
+    print('Prix', portfolio.price, 0)
+    print('Profit', portfolio.profit_amount, 0)
+
+    # test_add_shares
+    print("---- Test 2 ----")
+    shares = [Share("Share D", 120, 4), Share("Share E", 180, 7)]
+    portfolio = Portfolio()
+    portfolio.add_shares(shares)
+    print("Nombre d'actions", len(portfolio.shares), 2)
+    print('Liste des actions', portfolio.shares, shares)
+    print('Prix', portfolio.price, 300)  # 120 + 180
+    print('Profit €', portfolio.profit_amount, 120 * 4 / 100 + 180 * 7 / 100)     # 17.4
+    print('Profit %', portfolio.profit_percentage, 17.4 / 300 * 100)              # 5.8
+
+    # test_add_data_shares
+    print("---- Test 3 ----")
+    portfolio = Portfolio()
+    names = ["Share A", "Share C"]
+    prices = [10, 20]
+    profits = [5, 10]
+    portfolio.add_shares_from_data(names, prices, profits)
+    print("Nombre d'actions", len(portfolio.shares), 2)
+    print('Prix', portfolio.price, 30)
+    print('Profit €', portfolio.profit_amount, 10 * 5 /100 + 20 * 10 / 100)    # 2.5
+    print('Profit %', portfolio.profit_percentage, 2.5 / 30 * 100)             # 8.3333
