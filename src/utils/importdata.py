@@ -3,17 +3,6 @@ import csv
 from models import Portfolio
 
 
-# def select_positive_shares(portfolio: Portfolio) -> None:
-#     """Select shares with positive prices and profits from the portfolio."""
-#     available_actions = []
-#     total_price = 0
-#     for action in portfolio.actions:
-#         if action.price > 0 and action.profit > 0:
-#             available_actions.append(action)
-#             total_price += action.price
-#     portfolio.actions = available_actions
-
-
 def import_shares_data(file) -> Portfolio:
     """Import shares data from a file and return three lists of names, prices, profits"""
     names, prices, profits = [], [], []
