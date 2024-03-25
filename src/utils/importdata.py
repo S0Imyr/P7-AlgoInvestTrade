@@ -14,7 +14,7 @@ from models import Portfolio
 #     portfolio.actions = available_actions
 
 
-def import_actions_data(file) -> Portfolio:
+def import_shares_data(file) -> Portfolio:
     """Import shares data from a file and return three lists of names, prices, profits"""
     names, prices, profits = [], [], []
     with open(file, newline='') as csvfile:
@@ -27,6 +27,6 @@ def import_actions_data(file) -> Portfolio:
             if row[2] != 'profit':
                 profits.append(float(row[2]))
     market = Portfolio()
-    market.add_data_actions(names, prices, profits)
+    market.add_data_shares(names, prices, profits)
     market.remove_ineffective_shares()
     return market

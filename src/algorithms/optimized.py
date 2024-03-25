@@ -7,17 +7,17 @@ from algorithms.bruteforce import bruteforce
 
 
 def greedy(market, cap):
-    actions_sorted_by_profit = sorted(market.actions, key=attrgetter("profit"), reverse=True)
+    shares_sorted_by_profit = sorted(market.shares, key=attrgetter("profit"), reverse=True)
     portfolio = Portfolio()
-    for action in actions_sorted_by_profit:
-        if portfolio.price + action.price < cap:
-            portfolio.add_actions([action])
+    for share in shares_sorted_by_profit:
+        if portfolio.price + share.price < cap:
+            portfolio.add_shares([share])
     return portfolio
 
 
-def n_best_actions(portfolio, num_select):
+def n_best_shares(portfolio, num_select):
     portfolio_select = Portfolio()
-    portfolio_select.actions = sorted(portfolio.actions, key=attrgetter("profit"), reverse=True)[:num_select]
+    portfolio_select.shares = sorted(portfolio.shares, key=attrgetter("profit"), reverse=True)[:num_select]
     return portfolio_select
 
 
@@ -41,30 +41,31 @@ def dynamic_programming(price_cap, prices, profits):
     return f_shares_composition[-1][-1]
 
 
-def bruteforce_with_n_best_actions(market, cap, n):
-    market_selection = n_best_actions(market, n)
+def bruteforce_with_n_best_shares(market, cap, n):
+    market_selection = n_best_shares(market, n)
     portfolio = bruteforce(market_selection, cap)
     return portfolio
 
 
 def KS_dynamic(market, cap, ndigits=0):
     prices = []
-    for action in market.actions:
-        prices.append(math.ceil(action.price * (10 ** ndigits)))
-    num_actions = dynamic_programming(price_cap=math.ceil(cap * (10 ** ndigits)), prices=prices, profits=market.net_profits())
+    for share in market.shares:
+        prices.append(math.ceil(share.price * (10 ** ndigits)))
+    num_shares = dynamic_programming(price_cap=math.ceil(cap * (10 ** ndigits)), prices=prices, profits=market.net_profits())
     portfolio = Portfolio()
-    actions = []
-    for num_action in num_actions:
-        actions.append(market.actions[num_action-1])
-    portfolio.add_actions(actions)
+    shares = []
+    for num_share in num_shares:
+        shares.append(market.shares[num_share - 1])
+    portfolio.add_shares(shares)
     return portfolio
+
 
 if __name__ == '__main__':
     pass
     # "data\dataForceBrute.csv"
     # "data\dataset1_Python+P7.csv"
     # "data\dataset2_Python+P7.csv"
-    # market = import_actions_data(file=r"data\dataset1_Python+P7.csv")
+    # market = import_shares_data(file=r"data\dataset1_Python+P7.csv")
 
     # KS_dynamic(market, 500, ndigits=2)
 

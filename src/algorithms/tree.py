@@ -1,6 +1,6 @@
 import math
 from algorithms.bruteforce import list_branches, best_branch_portfolio
-from utils.importdata import import_actions_data
+from utils.importdata import import_shares_data
 
 
 def how_many_shares(action_price, money):
@@ -170,7 +170,7 @@ if __name__ == '__main__':
 
     data_file = '../data/dataForceBrute.csv'
     cap = 500
-    market = import_actions_data(data_file)
+    market = import_shares_data(data_file)
     branches = list_branches(market, cap)
     branch = best_branch_portfolio(branches)
     display_best_branch(branch)

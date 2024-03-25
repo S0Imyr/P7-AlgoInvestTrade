@@ -28,9 +28,9 @@ def display_sorted_results(results):
                + display_cell_length('Profit', 12) + '\n')
     for node in sorted_results[:100]:
         composition = ""
-        for action, num in node.history.items():
+        for share, num in node.history.items():
             if num != 0:
-                composition += f"{num} {action} - "
+                composition += f"{num} {share} - "
         display += (display_cell_length(composition[:-2], 50) + ' | '
                     + display_cell_length(node.price, 12) + ' | '
                     + display_cell_length(node.net_profit, 12) + '\n')

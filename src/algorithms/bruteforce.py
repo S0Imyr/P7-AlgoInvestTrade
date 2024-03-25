@@ -3,11 +3,11 @@ import itertools
 from typing import List, Tuple
 
 from models import Portfolio
-from utils.importdata import import_actions_data
+from utils.importdata import import_shares_data
 
 
 class Node:
-    def __init__(self, height, width, price, net_profit, composition):
+    def __init__(self, height: int, width: int, price: float, net_profit: float, composition):
         self.height = height
         self.width = width
         self.price = price
@@ -23,19 +23,19 @@ class Node:
 def list_branches(market: Portfolio, cap: float) -> List[Node]:
     step = 0
     nodes = [Node(step, 0, 0, 0, [])]
-    for action in market.actions:
+    for share in market.shares:
         next_nodes = []
         width = 0
         for node in nodes:
             node.width += 1
             width += 1
             next_nodes.append(node)
-            new_price = node.price + action.price
+            new_price = node.price + share.price
             if new_price < cap:
-                new_profit = node.net_profit + action.net_profit
+                new_profit = node.net_profit + share.net_profit
                 new_composition = []
                 new_composition.extend(node.composition)
-                new_composition.append(action.name)
+                new_composition.append(share.name)
                 next_nodes.append(Node(step, width, new_price, new_profit, new_composition))
             width += 1
         step += 1
@@ -62,7 +62,7 @@ def best_branch_portfolio(nodes):
 
 def list_portfolios(market: Portfolio) -> List[List[Tuple[str, float, float]]]:
     """List all possible portfolios."""
-    return [list(portfolio) for i in range(len(market)) for portfolio in itertools.combinations(market.actions, i)]
+    return [list(portfolio) for i in range(len(market)) for portfolio in itertools.combinations(market.shares, i)]
 
 
 def best_portfolios(portfolios, cap):
@@ -70,19 +70,19 @@ def best_portfolios(portfolios, cap):
     for portfolio in portfolios:
         portfolio_price = 0
         portfolio_profit = 0
-        for action in portfolio:
-            portfolio_price += action.price
-            portfolio_profit += action.net_profit
+        for share in portfolio:
+            portfolio_price += share.price
+            portfolio_profit += share.net_profit
         if portfolio_price <= cap and portfolio_profit > best_portfolio.profit:
             best_portfolio = Portfolio()
-            best_portfolio.actions = portfolio
+            best_portfolio.shares = portfolio
             best_portfolio.price = portfolio_price
             best_portfolio.profit = portfolio_profit
     return best_portfolio
 
 
 def bruteforce(market, cap):
-    all_possible_portfolio = list_portfolios(market.actions)
+    all_possible_portfolio = list_portfolios(market)
     best_portfolio = best_portfolios(all_possible_portfolio, cap)
     return best_portfolio
 
@@ -91,8 +91,8 @@ if __name__ == '__main__':
 
     data_file = '../data/dataForceBrute.csv'
     cap = 500
-    market = import_actions_data(data_file)
+    market = import_shares_data(data_file)
     branches = list_branches(market, cap)
-    print(list_portfolios(market))
+    print(type(list_portfolios(market)[2]))
     branch = best_branch_portfolio(branches)
 

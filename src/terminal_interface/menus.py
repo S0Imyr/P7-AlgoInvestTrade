@@ -1,10 +1,10 @@
 import time
 
 from algorithms.tree import display_best_portfolio
-from utils.importdata import import_actions_data
+from utils.importdata import import_shares_data
 
 from algorithms.bruteforce import bruteforce
-from algorithms.optimized import KS_dynamic, greedy, bruteforce_with_n_best_actions
+from algorithms.optimized import KS_dynamic, greedy, bruteforce_with_n_best_shares
 from utils.utils import input_positive_integer
 
 DATA_PATH = 'data/'
@@ -97,7 +97,7 @@ class MethodMenu:
         self.menu.add("Retour au menu principal", HomeMenu())
         self.menu.add("Quitter", ExitMenu())
         user_choice = self.menu.get_user_choice()
-        market = import_actions_data(file=self.data_file)
+        market = import_shares_data(file=self.data_file)
         if isinstance(user_choice, ExitMenu) or isinstance(user_choice, HomeMenu):
             return user_choice()
         cap = input_positive_integer("Quel est le montant maximal pour le portefeuille ? \n")
@@ -108,7 +108,7 @@ class MethodMenu:
             portfolio = greedy(market=market, cap=cap)
         elif self.menu.choice == 2:
             number_best_actions = input_positive_integer("Sur quel nombre d'actions voulez vous travailler ? \n")
-            portfolio = bruteforce_with_n_best_actions(market=market, cap=cap, n=number_best_actions)
+            portfolio = bruteforce_with_n_best_shares(market=market, cap=cap, n=number_best_actions)
         elif self.menu.choice == 3:
             number_of_decimals = input_positive_integer("Pour la précision sur les prix, combien de décimales ? \n")
             portfolio = KS_dynamic(market=market, cap=cap, ndigits=number_of_decimals)
