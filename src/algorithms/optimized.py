@@ -51,7 +51,7 @@ def KS_dynamic(market, cap, ndigits=0):
     prices = []
     for share in market.shares:
         prices.append(math.ceil(share.price * (10 ** ndigits)))
-    num_shares = dynamic_programming(price_cap=math.ceil(cap * (10 ** ndigits)), prices=prices, profits=market.net_profits())
+    num_shares = dynamic_programming(price_cap=math.ceil(cap * (10 ** ndigits)), prices=prices, profits=market.list_profit_amounts())
     portfolio = Portfolio()
     shares = []
     for num_share in num_shares:
