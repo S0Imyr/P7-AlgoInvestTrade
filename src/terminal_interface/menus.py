@@ -1,6 +1,6 @@
 import time
 
-from algorithms.tree import display_best_portfolio
+from algorithms.tree import display_portfolio
 from utils.data_import import import_shares_data
 
 from algorithms.bruteforce import bruteforce
@@ -113,7 +113,7 @@ class MethodMenu:
             number_of_decimals = input_positive_integer("Pour la précision sur les prix, combien de décimales ? \n")
             portfolio = KS_dynamic(market=market, cap=cap, ndigits=number_of_decimals)
         end_time = time.time()
-        display_best_portfolio(portfolio)
+        display_portfolio(portfolio)
         print(f"Temps d'exécution : {int((end_time - start_time)//60)} min {int(round((end_time - start_time)%60, ndigits=0))} s.")
         return user_choice()
 

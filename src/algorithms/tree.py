@@ -1,5 +1,6 @@
 import math
 from algorithms.bruteforce import list_branches, best_branch_portfolio
+from models import Portfolio
 from utils.data_import import import_shares_data
 
 
@@ -155,15 +156,23 @@ def display_best_result(results):
     print(display)
 
 
-def display_best_portfolio(portfolio):
-    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{portfolio} \nPour un prix total de {portfolio.price} \nPour un profit total de {portfolio.profit_percentage}")
+def display_portfolio(portfolio: Portfolio):
+    print(f"\nLe portefeuille : \n "
+          f"\nComposition: \n \n{portfolio} \n"
+          f"Pour un prix total de {portfolio.price:.2f} \n"
+          f"Pour un pourcentage de profit de {portfolio.profit_percentage:.2f}%\n"
+          f"Pour un montant de profit de {portfolio.profit_amount:.2f}"
+          )
 
 
 def display_best_branch(branch):
     composition = ""
     for action in branch.composition:
         composition += f"{action} \n"
-    print(f"\nLe meilleur portefeuille trouvé : \n \nComposition: \n \n{composition} \nPour un prix total de {branch.price} \nPour un profit total de {branch.profit_amount}")
+    print(f"\nLe meilleur portefeuille trouvé : \n "
+          f"\nComposition: \n \n{composition} "
+          f"\nPour un prix total de {branch.price:.2f} "
+          f"\nPour un profit total de {branch.profit_amount:.2f}")
 
 
 if __name__ == '__main__':

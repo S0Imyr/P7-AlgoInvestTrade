@@ -56,7 +56,7 @@ def KS_dynamic(market, cap, ndigits=0):
     shares = []
     for num_share in num_shares:
         shares.append(market.shares[num_share - 1])
-    portfolio.add_shares(shares)
+    portfolio.add_multiples_shares(shares)
     return portfolio
 
 

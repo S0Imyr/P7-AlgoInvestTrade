@@ -15,11 +15,13 @@ class Portfolio:
     def __repr__(self):
         display = display_cell_length('Action', 12) + ' | ' \
                   + display_cell_length('Price', 12) + ' | ' \
-                  + display_cell_length('Profit', 12) + '\n'
+                  + display_cell_length('Profit %', 12) + ' | ' \
+                  + display_cell_length('Profit €', 12) + '\n'
         for share in self.shares:
             display += display_cell_length(share.name, 12) + ' | ' \
                        + display_cell_length(share.price, 12) + ' | ' \
-                       + display_cell_length(str(share.profit_percentage) + '%', 12) + '\n'
+                       + display_cell_length(str(share.profit_percentage) + '%', 12) + ' | ' \
+                       + display_cell_length(str(share.profit_amount) + '€', 12) + '\n'
         return display
 
     def __len__(self):
@@ -36,9 +38,9 @@ class Portfolio:
         self.price += share.price
         self.profit_amount += share.profit_amount
 
-    def add_shares(self, shares: List[Share]) -> None:
+    def add_multiples_shares(self, shares_list: List[Share]) -> None:
         """Add multiple shares to the portfolio."""
-        for share in shares:
+        for share in shares_list:
             self.add_share(share)
 
     def list_prices(self) -> List[float]:
@@ -49,13 +51,15 @@ class Portfolio:
         """Return a list of net profits for all shares in the portfolio."""
         return [share.profit_amount for share in self.shares]
 
-    def add_shares_from_data(self, names: List[str], prices: List[float], profits: List[float]) -> None:
+    def add_shares_from_data(self, names_list: List[str], prices_list: List[float], profits_list: List[float]) -> None:
         """Check if the data can be converted into shares and then add them to the portfolio"""
-        if len(names) != len(prices) or len(names) != len(profits) or len(prices) != len(profits):
+        if (len(names_list) != len(prices_list)
+                or len(names_list) != len(profits_list)
+                or len(prices_list) != len(profits_list)):
             raise ValueError("The prices data and the profits data must coincide. The number of elements don't match")
 
         ignored_data = []
-        for name, price, profit in zip(names, prices, profits):
+        for name, price, profit in zip(names_list, prices_list, profits_list):
             try:
                 new_share = Share(name, price, profit)
                 self.add_share(new_share)
@@ -90,7 +94,7 @@ if __name__ == '__main__':
     print("---- Test 2 ----")
     shares = [Share("Share D", 120, 4), Share("Share E", 180, 7)]
     portfolio = Portfolio()
-    portfolio.add_shares(shares)
+    portfolio.add_multiples_shares(shares)
     print("Nombre d'actions", len(portfolio.shares), 2)
     print('Liste des actions', portfolio.shares, shares)
     print('Prix', portfolio.price, 300)  # 120 + 180

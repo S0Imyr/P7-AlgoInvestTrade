@@ -50,7 +50,7 @@ class TestPortfolio(unittest.TestCase):
     def test_add_shares(self):
         shares = [Share("Share D", 120, 4), Share("Share E", 180, 7)]
         portfolio = Portfolio()
-        portfolio.add_shares(shares)
+        portfolio.add_multiples_shares(shares)
         self.assertEqual(len(portfolio.shares), 2)
         self.assertEqual(portfolio.shares, shares)
         self.assertEqual(portfolio.price, 300)  # 120 + 180
